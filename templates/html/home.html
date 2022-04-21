@@ -1,0 +1,197 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>WaPay - Send & Receive Money Without Stress</title>
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+	<!-- Navbar -->
+	<nav class="navbar">
+		<div class="container">
+			<a href="#" class="logo">WaPay</a>
+			<div class="hamburger" id="hamburger">
+				<span class="line top" ></span>
+				<span class="line middle"></span>
+				<span class="line bottom"></span>
+			</div>
+			<ul class="nav-menu">
+				<li><a href="#">Home</a></li>
+				<li><a href="#services">Services</a></li>
+				<li><a href="#transaction">Transaction</a></li>
+				<li><a href="dashboard">Dashboard</a></li>
+				<li><a href="#">About Us</a></li>
+				<div class="auth">	
+					<li><a href="/login">Login</a></li>
+					<li class="get-started"><a href="/register">Get Started</a></li>
+				</div>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- Section -->
+	<section class="hero">
+		<div class="container">
+			<div class="hero-text">
+				<h1>Transfer Made Easy On WaPay</h1>
+				<p>Allied Wallet’s eWallet is a new way to pay friends, family and business associates with an eWallet account. With eWallet, each user can add money by linking a bank account and managing money on their phone or computer with our eWallet dashboard.</p>
+
+				<div class="get-started-form">
+					<input type="" name="" placeholder="Enter Email">
+					<button>Get Started</button>
+				</div>
+			</div>
+			<div class="hero-img">
+				<img class="large-bg" src="{% static 'images/bg.png' %}">
+				<img class="small-bg" src="{% static 'images/small-bg.png' %}">
+			</div>
+		</div>
+	</section>
+
+	<div class="transact-info">
+		<div class="container">
+			<div class="transact-heading">
+				<h1>You can use all these services for your convenience.</h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aaborum.</p>
+			</div>
+			<div class="transact-details" id="services">
+				<div class="transact-detail">
+					<img src="{% static 'images/purse.png' %}">
+					<div>
+						<p>Pay Bills</p>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore e</p>
+					</div>
+				</div>
+				<div class="transact-detail">
+					<img src="{% static 'images/credit-card.png' %}">
+					<div>
+						<p>Connect with People</p>
+						<p>Transferring funds to a friend or business associate’s account is quick and secure within a 24 hour period</p>
+					</div>
+				</div>
+				<div class="transact-detail">
+					<img src="{% static 'images/purse.png' %}">
+					<div>
+						<p>Send & Receive Funds</p>
+						<p>Allied Wallet’s eWallet is a limitless tool that enables its users to send money at any time.</p>
+					</div>
+				</div>
+				<div class="transact-detail">
+					<img src="{% static 'images/credit-card.png' %}">
+					<div>
+						<p>Make Purchases</p>
+						<p>Allied Wallet’s eWallet is a limitless tool that enables its users to transfer money at any time.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="infos">
+		<div class="container">
+			<div class="info">
+				<div class="info-text">
+					<h1>Simple Payment Platform for any service</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</div>
+				<div class="info-img">
+					<img src="{% static 'images/img1.png' %}">
+				</div>
+			</div>
+			<div class="info">
+				<div class="info-img">
+					<img src="{% static 'images/phone.png' %}">
+				</div>
+				<div class="info-text">
+					<h1>Simple Payment Platform for any service</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</div>
+			</div>
+			<div class="info">
+				<div class="info-text">
+					<h1>Simple Payment Platform for any service</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</div>
+				<div class="info-img">
+					<img src="{% static 'images/img2.png' %}">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="newsletter">
+		<div class="container">
+			<div class="content">
+				<h3>Subscribe to Our Newsletter</h3>
+				<form>
+					<input type="" name="" placeholder="Enter email">
+					<button>Subscribe</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer>
+		<div class="container">
+			<div class="footer-row">
+				<div class="footer-col">
+					<h6 class="">About Us</h6>
+	              	<div class="">
+	                	<p>Bera.ng is a free classified ads website for cars, jobs, real estate, and everything else. Find what you're looking for or create your own ad for free! Our goal at Bera.ng is to make it as easy as possible to buy or sell anything.</p>
+	            	</div>
+				</div>
+				<div class="footer-col">
+		            <h6 class="">Contact Information</h6>
+		              	<ul class="contact-footer">
+		                	<li>
+		                  		<strong>Address : </strong><span>Bera Street, Ibadan, Oyo State.</span>
+		                	</li>
+		                	<li>
+		                  		<strong>Phone : </strong><span>+2348012312312</span>
+		                	</li>
+		                	<li>
+		                  		<strong>E-mail : </strong><span><a href="#">info@bera.ng</a></span>
+		                	</li>
+		              	</ul>
+				</div>
+				<div class="footer-col">	
+              		<h6 class="">Help</h6>
+              		<div class="">
+                  		<ul>
+                      		<li><a href="">support@bera.ng </a></li>
+                      		<li><a href="">FAQ</a></li>
+                      		<li><a href="">Report Infringement</a></li>
+                  		</ul>
+              		</div>
+				</div>
+			</div>
+			
+
+		</div>
+	</footer>
+
+
+	<script src="assets/js/script.js"></script>
+</body>
+</html>
