@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 
     # Local Apps
     'user',
-    'dashboard',
+    'wallet',
 
 
     # 3rd Party Apps
