@@ -1,10 +1,15 @@
 from django import template
+from django.http import request
 from django.shortcuts import render
+from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
-class RegisterView(TemplateView):
+from django.conf import settings
+from .forms import RegisterForm
+
+class RegisterView(CreateView):
     template_name = 'html/auth/register.html'
 
 

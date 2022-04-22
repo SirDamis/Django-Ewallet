@@ -1,21 +1,25 @@
 from django import template
 from django.views.generic import TemplateView
 
-
-class WalletView(TemplateView):
+from django.contrib.auth.mixins import LoginRequiredMixin
+class WalletView(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
     template_name = 'html/wallet/dashboard.html'
 
 
 
-class SendFundView(TemplateView):
+class SendFundView(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
     template_name = 'html/wallet/send-fund.html'
 
 
 
-class ReceiveFundView(TemplateView):
+class ReceiveFundView(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
     template_name = 'html/wallet/receive-fund.html'
 
 
 
-class FundWallet(TemplateView):
+class FundWallet(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
     template_name = 'html/wallet/'
