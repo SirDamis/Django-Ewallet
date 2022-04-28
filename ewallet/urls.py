@@ -21,7 +21,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
-
-    # path('password-reset-confirm/{token}/{uidb64}', auth_views.password_reset_confirm),
     path('wallet/', include('wallet.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

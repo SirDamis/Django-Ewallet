@@ -7,13 +7,25 @@ WaPay is built using Python's Django framework.
 ## SetUp
 
 Clone the project and navigate into the project directory.
-
-Activate the virtual environment and install the dependencies.
-
 ```bash
-pip install requirements.txt
+git clone https://github.com/SirDamis/Django-Ewallet.git
+cd Django-Ewallet
 ```
 
+Activate the virtual environment  
+```bash
+pip install --user pipenv
+pipenv shell
+```
+
+
+Install the dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run the application
 Migrate the database using the command
 
 ```bash
@@ -26,6 +38,19 @@ Start the server using the command
 ```bash
 python manage.py runserver
 ```
+Starting development server at http://127.0.0.1:8000/
+ 
+## Functionalities
+* User Management
+  * Registration
+  * Login/Logout
+  * Change Password
+* Transaction Management
+  * Send Money
+  * Request Money
+  * Transactions History
+
+
 
 ## Live Url
 This project is hosted on heroku. Click this [link](https://github.com) to access the website
@@ -33,8 +58,6 @@ This project is hosted on heroku. Click this [link](https://github.com) to acces
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

@@ -6,9 +6,10 @@ from django.conf.urls.static import static
 from django.contrib.auth import views
 
 urlpatterns = [
+    path('', HomeView.as_view(), name='home'),
     path('register/', RegisterView.as_view(), name='register'),
 
-    path("login/", views.LoginView.as_view(template_name = 'html/auth/login.html'), name="login"),
+    path("login/", views.LoginView.as_view(redirect_authenticated_user=True, template_name = 'html/auth/login.html'), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path(
         "password_change/", views.PasswordChangeView.as_view(), name="password_change"

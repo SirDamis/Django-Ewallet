@@ -2,9 +2,14 @@ from django import template
 from django.views.generic import TemplateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 class WalletView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/dashboard.html'
+
+class TransactionView(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    template_name = 'html/wallet/transaction.html'
 
 
 

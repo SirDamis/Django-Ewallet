@@ -1,6 +1,6 @@
 from django import template
 from django.http import request
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView
@@ -22,15 +22,12 @@ class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'html/auth/register.html'
     success_url = reverse_lazy('login')
+    redirect_authenticated_user = True
 
-
-# class LoginView(TemplateView):
-#     form_class = LoginForm
-#     template_name = 'html/auth/login.html'
-#     success_url = reverse_lazy('dashboard')
-
-class ForgotPasswordView(TemplateView):
-    template_name = 'html/auth/forgot-password.html'
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('wallet')
+        return super(RegisterView, self).dispatch(self, request, *args, **kwargs)
 
 
 
