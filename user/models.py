@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin
 )
-
+import uuid
 from django.utils import timezone
 
 
@@ -58,7 +58,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     name = models.CharField(max_length=150)
-    wallet_number = models.CharField(max_length=10)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     created_at = models.DateField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False) # Admin user; Non super-user

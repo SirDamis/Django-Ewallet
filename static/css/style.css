@@ -967,6 +967,11 @@ button:focus {
     padding-left: 10px;
     font-size: 13px;
 }
+.auth .auth-card form .validation-error{
+    margin-top: 3px;
+    color: red;
+    font-size: 12px;
+}
 .auth .auth-card .auth-submit {
     margin-top: 12px;
     width: 100%;
@@ -992,6 +997,7 @@ button:focus {
 .auth .auth-card .forgot-password a:hover {
     text-decoration: underline;
 }
+
 @media only screen and (max-width: 1100px) {
     .auth {
         margin: 100px 30px;
@@ -1031,5 +1037,3 @@ button:focus {
         width: 100%;
     }
 }
-
-/* Login  */

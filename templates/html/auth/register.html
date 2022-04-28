@@ -19,23 +19,37 @@
 							Already have an account? <a href="/login">Login</a> 
 						</p>
 					</div>
-					<form action="/register/" method="post">
+					<form action="/register/" method="POST">
 						{% csrf_token %}
                         <div class="form-group">
                             <label for="email">Name</label> <br>
-                            <input type="text" class="form-control" id="name" name="name">
+							{{ form.name }}
                        </div>
 						<div class="form-group">
 							 <label for="email">Email</label> <br>
-							 <input type="text" class="form-control" id="email" name="email">
+							 {{ form.email }} <br>
+							 {% if form.errors.email %}
+								<span class='validation-error'>
+									{% for error in form.errors.email %}
+									{{ error }}
+									{% endfor %}
+								</span>
+							{% endif %}
 						</div>
 						<div class="form-group">
 							<label for="password">Password</label> <br>
-							<input type="password" class="form-control" id="password" name="password">
+							{{ form.password1 }} <br>
+							{% if form.errors.password2 %}
+							   <span class='validation-error'>
+								   {% for error in form.errors.password2 %}
+								   {{ error }}
+								   {% endfor %}
+							   </span>
+						   {% endif %}
 						</div>
                         <div class="form-group">
 							<label for="password">Confirm Password</label> <br>
-							<input type="password" class="form-control" id="password" name="password_confirmation">
+							{{ form.password2 }}
 						</div>
 	 
 						<button type="submit" class="auth-submit">Register </button>
