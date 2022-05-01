@@ -15,7 +15,8 @@ from django.conf import settings
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import LoginForm, RegisterForm
+from .forms import RegisterForm
+from .models import User
 
 # Sign Up View
 class RegisterView(CreateView):
@@ -35,3 +36,4 @@ class RegisterView(CreateView):
 
 class HomeView(TemplateView):
     template_name = 'html/home.html'
+    

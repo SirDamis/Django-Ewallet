@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<title>WaPay - User Dashboard</title>
-	<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -15,7 +16,7 @@
 				<div class="logo-img">
 					<img src="https://image.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg">
 				</div>
-				<div class="welcome-text">Welcome, <br> {{ $user->name }}</div>
+				<div class="welcome-text">Welcome, <br> {{ user.name }}</div>
 			</div>
 			<ul class="page-links">
 				<li>
@@ -59,10 +60,10 @@
 					<p class="wallet-text">Account Details </p>
 					<div class="wallet-info">
 						<p>Wallet Number</p>
-						<h4>{{ $wallet->number }}</h4>
+						<h4>0909</h4>
 					</div>
 					<div class="balance-action">
-						<p>Wallet Balance: </p> <span>{{ $wallet->balance }}</span>
+						<p>Wallet Balance: </p> <span>Balance</span>
 					</div>
 				</div>
                 <form action="">

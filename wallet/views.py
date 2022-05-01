@@ -18,13 +18,15 @@ class SendFundView(LoginRequiredMixin, TemplateView):
     template_name = 'html/wallet/send-fund.html'
 
 
-
 class ReceiveFundView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/receive-fund.html'
 
 
-
 class FundWallet(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
-    template_name = 'html/wallet/'
+    template_name = 'html/wallet/fund-wallet'
+
+# class DebitWallet(LoginRequiredMixin, TemplateView):
+#     login_url = '/login/'
+#     template_name = 'html/wallet/debit-wallet'
