@@ -33,6 +33,10 @@ python manage.py makemigrations
 
 python manage.py migrate
 ```
+Create your copy of the env file 
+```
+cp .env.example .env 
+``` 
 
 Start the server using the command
 ```bash
@@ -46,9 +50,10 @@ Starting development server at http://127.0.0.1:8000/
   * Login/Logout
   * Change Password
 * Transaction Management
-  * Send Money
-  * Request Money
-  * Transactions History
+  * Fund wallet using your card
+  * Withdraw from wallet to your account
+  * Send and Receive Money from Wallet
+  * ViewT ransaction History
 
 
 

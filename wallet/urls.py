@@ -1,4 +1,3 @@
-from unicodedata import name
 from django.urls import path
 
 from .views import (
@@ -6,7 +5,8 @@ from .views import (
     ReceiveFundView,
     SendFundView,
     WalletView,
-    TransactionView
+    TransactionView,
+    WithdrawWalletView,
 )
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('send-fund/', SendFundView.as_view(), name='send-fund'),
     path('receive-fund/', ReceiveFundView.as_view(), name='receive-fund'),
     path('fund-wallet', FundWallet.as_view(), name='fund-wallet'),
-]
+    path('withdraw-wallet', WithdrawWalletView.as_view(), name='withdraw-wallet'),
+] 

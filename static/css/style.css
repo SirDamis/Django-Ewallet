@@ -790,6 +790,25 @@ button:focus {
     button {
     width: auto;
 }
+.dashboard-container 
+.content
+.content-body
+.wallet-transaction{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    padding: 14px 0;
+    /* border: 1px solid black; */
+}
+.dashboard-container 
+.content
+.content-body
+.wallet-transaction
+form{
+    /* border: 1px solid black; */
+    padding: 15px 8px;
+    background-color: white;
+}
 /* Dashboard Receive Fund Overlay */
 .receive-overlay {
     height: 100%;
@@ -810,6 +829,8 @@ button:focus {
 .receive-overlay .close_overlay_btn:hover {
     cursor: pointer;
 }
+
+
 
 /* Mobile Responsiveness */
 @media screen and (max-width: 460px) {
