@@ -43,7 +43,11 @@ Start the server using the command
 python manage.py runserver
 ```
 Starting development server at http://127.0.0.1:8000/
- 
+## Run the test suites
+Run the test cases using the pytest command
+```bash
+pytest
+```
 ## Functionalities
 * User Management
   * Registration
@@ -53,11 +57,11 @@ Starting development server at http://127.0.0.1:8000/
   * Fund wallet using your card
   * Withdraw from wallet to your account
   * Send and Receive Money from Wallet
-  * ViewT ransaction History
+  * View Transaction History
 
 
 
-## Live Url
+## Live URL
 This project is hosted on heroku. Click this [link](https://github.com) to access the website
 
 
