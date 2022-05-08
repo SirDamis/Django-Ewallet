@@ -1,35 +1,20 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form class="form-container" method="POST" action="/wallet/fund-wallet">
-        {% csrf_token %}
-        <div class="field-container">
-            <label for="fullname">Name</label>
-            <input id="fullname" maxlength="20" name="name" type="text">
-        </div>
-        <div class="field-container">
-            <label for="card_number">Card Number</label>
-            <input id="card_number" name="card_number" type="text" pattern="[0-9]*" inputmode="numeric">
-        </div>
-        <div class="field-container">
-            <label for="expirationdate">Expiration (mm/yy)</label>
-            <input id="expirationdate" type="text" pattern="[0-9]*" inputmode="numeric">
-        </div>
-        <div class="field-container">
-            <label for="cvv">CVV</label>
-            <input id="cvv" type="text" pattern="[0-9]*" inputmode="numeric">
-        </div>
-
-        <div class="field-container">
-            <label for="amount">Amount</label>
-            <input name='amount' id="amount" type="text" pattern="[0-9]*" inputmode="numeric">
-        </div>
-        <button>Submit</button>
-    </form>
-</body>
-</html>
+{% extends 'html/wallet/base.html' %} 
+{% block content %}
+<div class="content-body">
+	<div class="balance">
+		<p class="wallet-text">Account Details </p>
+		<div class="wallet-info">
+			<p>Wallet Number</p>
+			<h4>{{ user.uuid.hex }}</h4>
+		</div>
+		<div class="balance-action">
+			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
+			<div class="balance-button-group">
+				<button>Send</button>
+				<button id="receive_fund_btn">Receive</button>
+			</div>
+		</div>
+	</div>
+	
+</div>
+{% endblock content %}

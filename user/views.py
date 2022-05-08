@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
 from django.conf import settings
+from wallet.models import Wallet
 # from .forms import RegisterForm
 
 # class RegisterView(CreateView):
@@ -25,10 +26,10 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
     redirect_authenticated_user = True
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     if request.user.is_authenticated:
-    #         return redirect('wallet')
-    #     return super(RegisterView, self).dispatch(self, request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('wallet')
+        return super(RegisterView, self).get(self, request, *args, **kwargs)
 
 
 
@@ -36,4 +37,3 @@ class RegisterView(CreateView):
 
 class HomeView(TemplateView):
     template_name = 'html/home.html'
-    

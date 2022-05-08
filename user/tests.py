@@ -1,3 +1,7 @@
-from django.test import TestCase
+import pytest
 
-# Create your tests here.
+# User registration test
+def test_user_registration():
+    pass
+
+# 

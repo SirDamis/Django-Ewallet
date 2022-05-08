@@ -1,7 +1,8 @@
 from django import template
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 
 import rave_python.rave_exceptions as RaveExceptions
 from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST, FLWPUBK_TEST
@@ -9,11 +10,43 @@ from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST,
 import requests
 from django.shortcuts import redirect
 
+from wallet.models import TransactionHistory, Wallet
 
 
 class WalletView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/dashboard.html'
+
+    def get_logged_in_user():
+        return request.user
+
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            auth = self.request.user
+            auth_wallet =  Wallet.objects.filter(user=auth).first()
+            context['balance'] = auth_wallet.balance
+            context['wallet_number'] = auth_wallet.number.hex
+            return context
+    
+
+class RecordTransactionHistory:
+    def __init__(self, reference, details, type, success, by, to):
+        self.reference = reference
+        self.details = details
+        self.type = type
+        self.success = success
+        self.by = by
+        self.to = to
+
+    def save(self):
+        TransactionHistory.objects.create(
+            reference=self.reference,
+            details=self.details,
+            type=self.type,
+            success=self.success,
+            by=self.by,
+            to=self.to,
+        )
 
 
 class TransactionView(LoginRequiredMixin, TemplateView):
@@ -28,6 +61,43 @@ class SendFundView(LoginRequiredMixin, TemplateView):
     """
     login_url = '/login/'
     template_name = 'html/wallet/send-fund.html'
+
+    
+
+    def post(self, request, *args, **kwargs):
+        wallet_number = request.POST.get('wallet_number')
+        amount = request.POST.get('amount')
+        details = request.POST.get('details')
+
+        auth = self.request.user
+        try:
+            receiver_wallet = Wallet.objects.filter(number=wallet_number).first()
+            sender_wallet = Wallet.objects.filter(user=auth).first()
+            if sender_wallet.balance >= int(amount):
+                tx_ref = generateTransactionReference()
+                receiver_wallet.balance  += int(amount)
+                sender_wallet.balance -= int(amount)
+                receiver_wallet.save()
+                sender_wallet.save()
+                
+
+                record_transaction = RecordTransactionHistory(
+                    reference=tx_ref,
+                    details=details,
+                    type='Fund Wallet',
+                    success=True,
+                    by=auth,
+                    to=receiver_wallet.user
+                )
+                record_transaction.save()
+
+            else:
+                return HttpResponse('balance not up amount being sent ')
+
+
+        except ValidationError:
+            return HttpResponse('Wallet Does Not exist')
+        return HttpResponse('Deposit done')
 
 
 class ReceiveFundView(LoginRequiredMixin, TemplateView):
@@ -46,23 +116,6 @@ class FundWallet(LoginRequiredMixin, TemplateView):
         # Get loggedin user and update ballance
         pass
 
-
-    def verifyTransaction(response):
-        if response['transactionComplete'] == True and  response['error'] == False:
-            pass
-            # Save to the transaction history database
-            # Handle WaPay's transaction charge
-            # Redirect with success prompt   
-
-    def validateRaveCharge(response):
-        rave = raveSetup()
-        if response['validationRequired'] ==  True:
-            validate_response = rave.Card.validate(
-                response["flwRef"], "12345"
-            )
-            return validate_response
-
-    
 
     # def post(self, request, *args, **kwargs):
     #     amount = request.POST.get('amount')
@@ -94,6 +147,9 @@ class FundWallet(LoginRequiredMixin, TemplateView):
         if response_data['status'] == 'success':
             return redirect(response_data['data']['link'])
         return HttpResponse('Error') #Create error page
+
+
+
 class WithdrawWalletView(LoginRequiredMixin, TemplateView):
     """
     Withdraw from user wallet to any bank account

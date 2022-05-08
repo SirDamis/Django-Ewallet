@@ -1,1 +1,20 @@
-<h1>Debit Wallet</h1>
+{% extends 'html/wallet/base.html' %} 
+{% block content %}
+<div class="content-body">
+	<div class="balance">
+		<p class="wallet-text">Account Details </p>
+		<div class="wallet-info">
+			<p>Wallet Number</p>
+			<h4>{{ user.uuid.hex }}</h4>
+		</div>
+		<div class="balance-action">
+			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
+			<div class="balance-button-group">
+				<button>Send</button>
+				<button id="receive_fund_btn">Receive</button>
+			</div>
+		</div>
+	</div>
+	
+</div>
+{% endblock content %}
