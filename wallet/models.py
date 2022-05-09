@@ -15,6 +15,7 @@ class Wallet(models.Model):
 
 class TransactionHistory(models.Model):
     reference = models.CharField(unique=True, max_length=16)
+    amount = models.DecimalField(decimal_places=2, max_digits=14)
     details = models.TextField(null=True, default=None)
     date = models.DateField(default=timezone.now)
     type = models.CharField(max_length=14)

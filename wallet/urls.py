@@ -7,10 +7,12 @@ from .views import (
     WalletView,
     TransactionView,
     WithdrawWalletView,
+    TestView,
 )
 
 urlpatterns = [
     path('', WalletView.as_view(), name='wallet'),
+    path('test/', TestView.as_view(), name='test-view'),
     path('transactions/', TransactionView.as_view(), name='transactions'),
     path('send-fund/', SendFundView.as_view(), name='send-fund'),
     path('receive-fund/', ReceiveFundView.as_view(), name='receive-fund'),
