@@ -5,7 +5,7 @@ import time
 
 FLWPUBK_TEST, FLWSECK_TEST = FLWPUBK_TEST, FLWSECK_TEST
 def raveSetup():
-    rave = Rave(FLWPUBK_TEST, FLWSECK_TEST)
+    rave = Rave(FLWPUBK_TEST, FLWSECK_TEST, usingEnv=False)
     return rave
 
 def generateTransactionReference():

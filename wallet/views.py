@@ -50,10 +50,6 @@ class WalletView(LoginRequiredMixin, TemplateView):
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
-    def get(self, request, *args, **kwargs):
-        print(self.request)
-        print(self.request.status)
-        return super().get(self, request, *args, **kwargs)
     
 
 
@@ -115,8 +111,44 @@ class TestView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/successful-fund.html'
 
-    # def get(self, request, *args, **kwargs):
-    #     ret
+    def get(self, request, *args, **kwargs):
+
+        # transaction_id = '3350541'
+        # reference = 'WP-1652139163620'
+        # status = 'successful'
+        # rave = raveSetup()
+        # response =  rave.Card.verify(reference)
+        # print(response)
+
+        if self.request.status == True:
+            tx_ref = self.request.tx_ref
+            transaction_id = self.request.transaction_id
+            transactionDetails = TransactionHistory.objects.filter(reference=tx_ref)
+            auth = self.request.user
+            wallet = Wallet.objects.filter(user=auth).first()
+            try:
+                response =  raveSetup.Card.verify(transaction_id)
+                if response['transactionComplete'] == True and response['amount'] == transactionDetails.amount and transactionDetails['success'] == False:
+                    wallet.balance  += Decimal(transactionDetails.amount)
+                    transactionDetails.success == True
+
+                    wallet.save()
+                    transactionDetails.save()
+                else:
+                    print('Payment unsucessful')
+                    pass
+
+
+
+        #          if response.data.status == "successful" and response.data.amount == transactionDetails.amount and response.data.currency == "NGN":
+        #     // Success! Confirm the customer's payment
+        #           else:
+        #     // Inform the customer their payment was unsuccessful
+
+            except RaveExceptions.TransactionVerificationError:
+                return HttpResponse('')
+
+
 
 class FundWallet(LoginRequiredMixin, TemplateView):
     """
