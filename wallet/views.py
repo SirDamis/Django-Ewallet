@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 
 import rave_python.rave_exceptions as RaveExceptions
-from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST, FLWPUBK_TEST
+from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST
 
 import requests
 from django.shortcuts import redirect
@@ -77,10 +77,10 @@ class SendFundView(LoginRequiredMixin, TemplateView):
         try:
             receiver_wallet = Wallet.objects.filter(number=wallet_number).first()
             sender_wallet = Wallet.objects.filter(user=auth).first()
-            if sender_wallet.balance >= Decimal(amount):
+            if sender_wallet.balance >= float(amount) and float(amount) >= 0:
                 tx_ref = generateTransactionReference()
-                receiver_wallet.balance  += Decimal(amount)
-                sender_wallet.balance -= Decimal(amount)
+                receiver_wallet.balance  += float(amount)
+                sender_wallet.balance -= float(amount)
                 receiver_wallet.save()
                 sender_wallet.save()
                 
@@ -95,7 +95,7 @@ class SendFundView(LoginRequiredMixin, TemplateView):
                 record_transaction.save()
 
             else:
-                return HttpResponse('balance not up amount being sent ')
+                return HttpResponse('balance not up amount being sent or negative balance')
 
 
         except ValidationError:
@@ -119,35 +119,35 @@ class TestView(LoginRequiredMixin, TemplateView):
         # rave = raveSetup()
         # response =  rave.Card.verify(reference)
         # print(response)
-
-        if self.request.status == True:
-            tx_ref = self.request.tx_ref
-            transaction_id = self.request.transaction_id
-            transactionDetails = TransactionHistory.objects.filter(reference=tx_ref)
+        
+        # return super().get(self, request, *args, **kwargs)
+        print(self.request.GET.get('status'))
+        if self.request.GET.get('status') == 'successful':
+            tx_ref = self.request.GET.get('tx_ref')
+            transactionDetails = TransactionHistory.objects.filter(reference=tx_ref).first()
             auth = self.request.user
             wallet = Wallet.objects.filter(user=auth).first()
-            try:
-                response =  raveSetup.Card.verify(transaction_id)
-                if response['transactionComplete'] == True and response['amount'] == transactionDetails.amount and transactionDetails['success'] == False:
-                    wallet.balance  += Decimal(transactionDetails.amount)
-                    transactionDetails.success == True
 
+            
+            try:
+                response =  raveSetup().Card.verify(tx_ref)
+                print(transactionDetails.amount, ", ", response['amount'] )
+                print(response['amount'] == float(transactionDetails.amount))
+                if response['transactionComplete'] == True and response['amount'] == float(transactionDetails.amount) and transactionDetails.success == False:
+                    wallet.balance  += Decimal(transactionDetails.amount)
+                    transactionDetails.success == 'True'
+                    print(transactionDetails.success)
                     wallet.save()
                     transactionDetails.save()
+                    print('Tes')
                 else:
                     print('Payment unsucessful')
                     pass
-
-
-
-        #          if response.data.status == "successful" and response.data.amount == transactionDetails.amount and response.data.currency == "NGN":
-        #     // Success! Confirm the customer's payment
-        #           else:
-        #     // Inform the customer their payment was unsuccessful
-
             except RaveExceptions.TransactionVerificationError:
-                return HttpResponse('')
-
+                return HttpResponse('Error verifying transaction')
+        else:
+            print('No')
+        return super().get(self, request, *args, **kwargs)
 
 
 class FundWallet(LoginRequiredMixin, TemplateView):
@@ -160,13 +160,13 @@ class FundWallet(LoginRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         tx_ref = generateTransactionReference()
         auth = self.request.user
-        amount = int(request.POST.get('amount'))
+        amount = float(request.POST.get('amount'))
 
         json = {
             'tx_ref': tx_ref,
             'amount': amount,
             'currency': "NGN",
-            'redirect_url': "http://127.0.0.1:8000/wallet",
+            'redirect_url': "http://127.0.0.1:8000/wallet/test",
             'customer': {
                 'email': request.user.email,
                 'name': request.user.name,

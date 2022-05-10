@@ -18,8 +18,22 @@ class TransactionHistory(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=14)
     details = models.TextField(null=True, default=None)
     date = models.DateField(default=timezone.now)
-    type = models.CharField(max_length=14)
-    success = models.BooleanField(default=False)
+    TYPE_CHOICES=(
+        ('FW', 'Fund Wallet'),
+        ('WW', 'Withdaw Wallet'),
+        ('TW', 'Transfer Wallet')
+    )
+    type = models.CharField(
+        max_length=2,
+        choices=TYPE_CHOICES,
+        default='FW',
+    )
+
+    SUCCESS_CHOICES=(
+        (True, 'True'),
+        (False, 'False'),
+    )
+    success = models.BooleanField(default=False, choices=SUCCESS_CHOICES)
     by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='sent_by')
     to = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='sent_to')
 
