@@ -10,6 +10,7 @@ from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST
 
 import requests
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 
 from wallet.models import TransactionHistory, Wallet
 
@@ -87,15 +88,22 @@ class SendFundView(LoginRequiredMixin, TemplateView):
                 record_transaction = RecordTransactionHistory(
                     reference=tx_ref,
                     details=details,
-                    type='Fund Wallet',
+                    amount=amount,
+                    type='TW',
                     success=True,
                     by=auth,
-                    to=receiver_wallet.user
                 )
                 record_transaction.save()
+                
+            elif float(amount) < 0:
+                context = {'error_msg': 'Enter positive amount'}
+                rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                return HttpResponse(rendered)
 
             else:
-                return HttpResponse('balance not up amount being sent or negative balance')
+                context = {'error_msg': 'Insufficient Fund'}
+                rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                return HttpResponse(rendered)
 
 
         except ValidationError:
@@ -107,14 +115,11 @@ class ReceiveFundView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/receive-fund.html'
 
-class TestView(LoginRequiredMixin, TemplateView):
+class FundWalletProccessView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/successful-fund.html'
 
     def get(self, request, *args, **kwargs):
-
-        # transaction_id = '3350541'
-        # reference = 'WP-1652139163620'
         print(self.request.GET.get('status'))
         if self.request.GET.get('status') == 'successful':
             tx_ref = self.request.GET.get('tx_ref')
@@ -130,16 +135,18 @@ class TestView(LoginRequiredMixin, TemplateView):
                     wallet.save()
                     transactionDetails.save()
                 else:
-                    print('Payment unsucessful')
-                    pass
+                    context = {'error_msg': 'Transaction Already Performed'}
+                    rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                    return HttpResponse(rendered)
             except RaveExceptions.TransactionVerificationError:
-                return HttpResponse('Error verifying transaction')
+                context = {'error_msg': 'Unable to verify transaction'}
+                rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                return HttpResponse(rendered)
         else:
-            print('No')
-        return super().get(self, request, *args, **kwargs)
+            return redirect('fund-wallet')
 
 
-class FundWallet(LoginRequiredMixin, TemplateView):
+class FundWalletView(LoginRequiredMixin, TemplateView):
     """
     Fund the user wallet
     """
@@ -155,7 +162,7 @@ class FundWallet(LoginRequiredMixin, TemplateView):
             'tx_ref': tx_ref,
             'amount': amount,
             'currency': "NGN",
-            'redirect_url': "http://127.0.0.1:8000/wallet/test",
+            'redirect_url': "http://127.0.0.1:8000/wallet/fund-wallet/succes",
             'customer': {
                 'email': request.user.email,
                 'name': request.user.name,
@@ -172,7 +179,7 @@ class FundWallet(LoginRequiredMixin, TemplateView):
                 reference=tx_ref,
                 amount = amount,
                 details='Fund Wallet',
-                type='Fund Wallet',
+                type='FW',
                 success=False,
                 by=auth,
                 to=auth
