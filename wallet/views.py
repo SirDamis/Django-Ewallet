@@ -115,31 +115,20 @@ class TestView(LoginRequiredMixin, TemplateView):
 
         # transaction_id = '3350541'
         # reference = 'WP-1652139163620'
-        # status = 'successful'
-        # rave = raveSetup()
-        # response =  rave.Card.verify(reference)
-        # print(response)
-        
-        # return super().get(self, request, *args, **kwargs)
         print(self.request.GET.get('status'))
         if self.request.GET.get('status') == 'successful':
             tx_ref = self.request.GET.get('tx_ref')
             transactionDetails = TransactionHistory.objects.filter(reference=tx_ref).first()
             auth = self.request.user
             wallet = Wallet.objects.filter(user=auth).first()
-
-            
+          
             try:
                 response =  raveSetup().Card.verify(tx_ref)
-                print(transactionDetails.amount, ", ", response['amount'] )
-                print(response['amount'] == float(transactionDetails.amount))
                 if response['transactionComplete'] == True and response['amount'] == float(transactionDetails.amount) and transactionDetails.success == False:
                     wallet.balance  += Decimal(transactionDetails.amount)
                     transactionDetails.success == 'True'
-                    print(transactionDetails.success)
                     wallet.save()
                     transactionDetails.save()
-                    print('Tes')
                 else:
                     print('Payment unsucessful')
                     pass
