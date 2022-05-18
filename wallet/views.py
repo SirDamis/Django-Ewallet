@@ -54,10 +54,6 @@ class WalletView(LoginRequiredMixin, TemplateView):
     
 
 
-class TransactionView(LoginRequiredMixin, TemplateView):
-    login_url = '/login/'
-    template_name = 'html/wallet/transaction.html'
-
 
 class SendFundView(LoginRequiredMixin, TemplateView):
     """
@@ -196,3 +192,8 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
     """
     login_url = '/login/'
     template_name = 'html/wallet/debit-wallet'
+
+
+class TransactionView(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    template_name = 'html/wallet/transaction.html'
