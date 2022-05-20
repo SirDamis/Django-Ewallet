@@ -15,6 +15,14 @@
 			</div>
 		</div>
 	</div>
+	<div class="wallet-transaction">
+		<form action="/wallet/witdraw-wallet/" method="POST">
+			{% csrf_token %}
+			<input type="decimal" id="amount" name="amount" placeholder="Amount"> <br>
+			
+			<p><button type="submit" id="submit">Send Fund</button></p>
+		</form>
+	</div>
 	
 </div>
 {% endblock content %}

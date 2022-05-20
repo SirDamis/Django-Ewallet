@@ -33,8 +33,15 @@ class TransactionHistory(models.Model):
         (True, 'True'),
         (False, 'False'),
     )
-    success = models.BooleanField(default=False, choices=SUCCESS_CHOICES)
+    success = models.BooleanField(default=False)
     by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='sent_by')
     to = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='sent_to')
+    amount = models.DecimalField(decimal_places=2, max_digits=14)
 
 
+
+class PendingWithdrawal(models.Model):
+    reference = models.CharField(unique=True, max_length=16)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=14)
+    date = models.DateField(default=timezone.now)

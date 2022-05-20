@@ -115,9 +115,11 @@ class FundWalletProccessView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/successful-fund.html'
 
+
+    # http://127.0.0.1:8000/wallet/fund-wallet/succes?status=successful&tx_ref=WP-1653008174132&transaction_id=3393442
     def get(self, request, *args, **kwargs):
         print(self.request.GET.get('status'))
-        if self.request.GET.get('status') == 'successful':
+        if (self.request.GET.get('status') == 'successful') and (self.request.GET.get('tx_ref')) and  (self.request.GET.get('transaction_id')):
             tx_ref = self.request.GET.get('tx_ref')
             transactionDetails = TransactionHistory.objects.filter(reference=tx_ref).first()
             auth = self.request.user
@@ -127,10 +129,12 @@ class FundWalletProccessView(LoginRequiredMixin, TemplateView):
                 response =  raveSetup().Card.verify(tx_ref)
                 if response['transactionComplete'] == True and response['amount'] == float(transactionDetails.amount) and transactionDetails.success == False:
                     wallet.balance  += Decimal(transactionDetails.amount)
-                    transactionDetails.success == 'True'
                     wallet.save()
+
+                    transactionDetails.success = True
                     transactionDetails.save()
                 else:
+                    # To do render the payment information
                     context = {'error_msg': 'Transaction Already Performed'}
                     rendered = render_to_string('html/wallet/failed-fund.html', context=context)
                     return HttpResponse(rendered)
@@ -138,6 +142,7 @@ class FundWalletProccessView(LoginRequiredMixin, TemplateView):
                 context = {'error_msg': 'Unable to verify transaction'}
                 rendered = render_to_string('html/wallet/failed-fund.html', context=context)
                 return HttpResponse(rendered)
+            return super().get(self, request, *args, **kwargs)
         else:
             return redirect('fund-wallet')
 
@@ -158,7 +163,7 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
             'tx_ref': tx_ref,
             'amount': amount,
             'currency': "NGN",
-            'redirect_url': "http://127.0.0.1:8000/wallet/fund-wallet/succes",
+            'redirect_url': "http://127.0.0.1:8000/wallet/fund-wallet/success",
             'customer': {
                 'email': request.user.email,
                 'name': request.user.name,
@@ -191,9 +196,42 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
     Withdraw from user wallet to any bank account
     """
     login_url = '/login/'
-    template_name = 'html/wallet/debit-wallet'
+    template_name = 'html/wallet/withdraw-wallet.html'
+
+
+
+    def post():
+        tx_ref = generateTransactionReference()
+        account_bank = request.POST.get('account_bank')
+        account_number = request.POST.get('account_number')
+        amount = float(request.POST.get('amount'))
+        narration = request.POST.get('narration')
+
+        details = {
+            "account_bank": account_bank,
+            "account_number": account_number,
+            "amount": amount,
+            "narration": narration,
+            "currency": "NGN",
+            "reference": tx_ref,
+            "callback_url": "https://webhook.site/b3e505b0-fe02-430e-a538-22bbbce8ce0d",
+            "debit_currency": "NGN"
+        }
+        res = rave.Transfer.initate(details)
+        print(res)
+        # To do:
+        # if Transfer is successful (withdrawal) 
+        # TSave tp transaction history table
+        # create a weebhook to track status,
+        # Charge user account and move to pendingwithdrawal table
+        # else
+        # Prompt user
+
+
 
 
 class TransactionView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/transaction.html'
+
+    
