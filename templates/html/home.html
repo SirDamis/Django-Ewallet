@@ -23,11 +23,15 @@
 				<li><a href="#">Home</a></li>
 				<li><a href="#services">Services</a></li>
 				<li><a href="#transaction">Transaction</a></li>
-				<li><a href="walllet">Dashboard</a></li>
 				<li><a href="#">About Us</a></li>
+
 				<div class="auth">	
-					<li><a href="/login">Login</a></li>
-					<li class="get-started"><a href="/register">Get Started</a></li>
+					{% if user.is_authenticated %}
+						<li><a href="wallet">Dashboard</a></li>
+					{% else %}
+						<li><a href="/login">Login</a></li>
+						<li class="get-started"><a href="/register">Get Started</a></li>
+					{% endif %}
 				</div>
 			</ul>
 		</div>

@@ -4,12 +4,17 @@
 
 <head>
     <meta charset="utf-8">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+    <link href="https://cdn.datatables.net/1.12.0/css/dataTables.bootstrap5.min.css">
     <title>WaPay - User Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
         integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    {% block headcontent %}
+    {% endblock headcontent %}
 </head>
 
 <body>
@@ -71,6 +76,9 @@
 
 
     <script src="{% static 'js/script.js' %}"></script>
+    {% block footercontent %}
+    
+    {% endblock footercontent %}
 </body>
 
 </html>

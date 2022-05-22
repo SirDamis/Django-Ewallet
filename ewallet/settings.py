@@ -14,6 +14,12 @@ from pathlib import Path
 import os
 import environ
 
+
+import django_heroku
+
+
+
+
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -41,7 +47,11 @@ SECRET_KEY = 'django-insecure-cqlz!2-4eru@2v@(v#_s&e*v@h#!2+@m5ry%hv!!*ix#tq=p_0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'https://wapaywallet.herokuapp.com/',
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -57,7 +67,6 @@ INSTALLED_APPS = [
     # Local Apps
     'user',
     'wallet',
-
 
     # 3rd Party Apps
 
@@ -167,3 +176,7 @@ DEFAULT_FROM_EMAIL = 'damisola@wapay.com'
 # Flutterwave Information
 FLWPUBK_TEST =  env('FLWPUBK_TEST')
 FLWSECK_TEST = env('FLWSECK_TEST')
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
