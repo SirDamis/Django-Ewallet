@@ -4,6 +4,7 @@ from django.http import HttpResponse, request
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
+from django.db.models import Sum
 
 import rave_python.rave_exceptions as RaveExceptions
 from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST
@@ -13,6 +14,7 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 
 from wallet.models import TransactionHistory, Wallet
+
 
 class RecordTransactionHistory:
     def __init__(self, reference, details, type, success, by, to, amount):
@@ -40,18 +42,24 @@ class WalletView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/dashboard.html'
 
-    def get_logged_in_user():
-        return request.user
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet =  Wallet.objects.filter(user=auth).first()
+        transaction_times = TransactionHistory.objects.filter(by=auth).count()
+        amount_sent = TransactionHistory.objects.filter(by=auth, success=True, type='TW').aggregate(total_amount_sent=Sum('amount'))
+        amount_received = TransactionHistory.objects.filter(to=auth, success=True, type='TW').aggregate(total_amount_received=Sum('amount'))
+        transactions = (TransactionHistory.objects.filter(by=auth, success=True).order_by('-date')[:5])
+        
+        
+        context['transactions'] = transactions
+        context['amount_sent'] = amount_sent['total_amount_sent'] if amount_sent['total_amount_sent'] else 0
+        context['amount_received'] = amount_received['total_amount_received'] if amount_received['total_amount_received'] else 0
+        context['transaction_times'] = transaction_times
         context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
-        return context
 
-    
+        return context
 
 
 
@@ -63,6 +71,12 @@ class SendFundView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/send-fund.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        auth = self.request.user
+        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        context['wallet_number'] = auth_wallet.number.hex
+        return context
     
 
     def post(self, request, *args, **kwargs):
@@ -74,10 +88,10 @@ class SendFundView(LoginRequiredMixin, TemplateView):
         try:
             receiver_wallet = Wallet.objects.filter(number=wallet_number).first()
             sender_wallet = Wallet.objects.filter(user=auth).first()
-            if sender_wallet.balance >= float(amount) and float(amount) >= 0:
+            if sender_wallet.balance >= Decimal(amount) and Decimal(amount) >= 0:
                 tx_ref = generateTransactionReference()
-                receiver_wallet.balance  += float(amount)
-                sender_wallet.balance -= float(amount)
+                receiver_wallet.balance  += Decimal(amount)
+                sender_wallet.balance -= Decimal(amount)
                 receiver_wallet.save()
                 sender_wallet.save()
                 
@@ -88,6 +102,7 @@ class SendFundView(LoginRequiredMixin, TemplateView):
                     type='TW',
                     success=True,
                     by=auth,
+                    to=receiver_wallet.user
                 )
                 record_transaction.save()
                 
@@ -104,16 +119,38 @@ class SendFundView(LoginRequiredMixin, TemplateView):
 
         except ValidationError:
             return HttpResponse('Wallet Does Not exist')
-        return HttpResponse('Deposit done')
+        
+        context = {'error_msg': 'Deposit succcessful'}
+        rendered = render_to_string('html/wallet/successful-fund.html', context=context)
+        return HttpResponse(rendered)
 
 
 class ReceiveFundView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/receive-fund.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        auth = self.request.user
+        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        context['wallet_number'] = auth_wallet.number.hex
+        return context
+
+    # To Do:
+    # -Barcode Display
+    # -Share to Whatsapp, Twitter
+    # -Custom Pay URL
+
 class FundWalletProccessView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/successful-fund.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        auth = self.request.user
+        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        context['wallet_number'] = auth_wallet.number.hex
+        return context
 
 
     # http://127.0.0.1:8000/wallet/fund-wallet/succes?status=successful&tx_ref=WP-1653008174132&transaction_id=3393442
@@ -153,6 +190,13 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
     """
     login_url = '/login/'
     template_name = 'html/wallet/fund-wallet.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        auth = self.request.user
+        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        context['wallet_number'] = auth_wallet.number.hex
+        return context
 
     def post(self, request, *args, **kwargs):
         tx_ref = generateTransactionReference()
@@ -198,7 +242,12 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/withdraw-wallet.html'
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        auth = self.request.user
+        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        context['wallet_number'] = auth_wallet.number.hex
+        return context
 
     def post():
         tx_ref = generateTransactionReference()
@@ -234,4 +283,9 @@ class TransactionView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/transaction.html'
 
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        auth = self.request.user
+        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        context['wallet_number'] = auth_wallet.number.hex
+        return context

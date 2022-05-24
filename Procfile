@@ -1,2 +1,2 @@
 release: python3 manage.py migrate
-web: gunicorn wapaywallet.wsgi
+web: gunicorn ewallet.wsgi --log-file -

@@ -5,22 +5,25 @@
 		<p class="wallet-text">Account Details </p>
 		<div class="wallet-info">
 			<p>Wallet Number</p>
-			<h4>{{ user.uuid.hex }}</h4>
+			<h4>{{ wallet_number }}</h4>
 		</div>
 		<div class="balance-action">
 			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
 			<div class="balance-button-group">
-				<button>Send</button>
-				<button id="receive_fund_btn">Receive</button>
+				<a href="send-fund"><button>Send</button></a>
+				<a href="receive-fund"><button id="receive_fund_btn">Receive</button></a>
 			</div>
 		</div>
 	</div>
 	<div class="wallet-transaction">
 		<form action="/wallet/fund-wallet/" method="POST">
 			{% csrf_token %}
-			<input type="decimal" id="amount" name="amount" placeholder="Amount"> <br>
+			<div class="form-group">
+				<label>Amount: </label> <br>
+				<input type="text" id="amount" name="amount" placeholder="Amount"> <br>
+			</div>
 			
-			<p><button type="submit" id="submit">Send Fund</button></p>
+			<p><button type="submit" id="submit">Fund Wallet</button></p>
 		</form>
 	</div>
 	

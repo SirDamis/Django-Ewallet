@@ -1,167 +1,22 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-
-<head>
-	<meta charset="utf-8">
-	<title>WaPay - User Transactions</title>
-	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-		integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-
-<body>
-	<div class="dashboard-container">
-		<nav class="sidebar">
-			<div class="logo">
-				<h4 class="logo-text">WaPay Wallet</h4>
-				<div class="logo-img">
-					<img src="https://image.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg">
-				</div>
-				<div class="welcome-text">Welcome, <br> {{ user.name }} </div>
-			</div>
-			<ul class="page-links">
-				<li>
-					<a href="#"><i class="fas fa-th-large"></i> Dashboard</a>
-				</li>
-				<li>
-					<a href="#"><i class="fas fa-exchange-alt"></i> Transactions</a>
-				</li>
-				<li>
-					<a href="#"><i class="fas fa-wallet"></i> Wallet</a>
-				</li>
-				<li>
-					<a href="#"><i class="fas fa-credit-card"></i> Fund Wallet</a>
-				</li>
-				<li>
-					<a href="#"><i class="fas fa-money-bill-wave"></i> Pay Bills</a>
-				</li>
-				<li>
-					<a href="#"><i class="fas fa-dollar-sign"></i> Currency Rate</a>
-				</li>
-			</ul>
-		</nav>
-		<div class="content">
-			<nav class="content-nav">
-				<div class="input-wrapper">
-					<input id="stuff" placeholder="Test">
-					<label for="stuff" class="input-icon"><i class="fas fa-search"></i></label>
-				</div>
-
-				<div class="">
-					<span class="notification">
-						<a href=""><i class="fas fa-bell"></i></a>
-					</span>
-					<span class="profile-img">
-						<img src="https://image.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg">
-					</span>
-				</div>
-			</nav>
-			<div class="content-body">
-				<div class="balance">
-					<p class="wallet-text">Account Details </p>
-					<div class="wallet-info">
-						<p>Wallet Number</p>
-						<h4>{{ user.uuid.hex }}</h4>
-					</div>
-					<div class="balance-action">
-						<p>Wallet Balance: <span> $20, 000</span> </span>
-						<div class="balance-button-group">
-							<button>Send</button>
-							<button id="receive_fund_btn">Receive</button>
-						</div>
-					</div>
-				</div>
-				<div class="account">
-					<p>Transactions </p>
-					<div class="account-transactions">
-						<div class="account-transaction-breakdown">
-							<h4>Total Amount Sent</h4>
-							<div class="account-transaction-amount">
-								$12,129
-							</div>
-						</div>
-						<div class="account-transaction-breakdown">
-							<h4>Total Amount Received</h4>
-							<div class="account-transaction-amount">
-								$23,122
-							</div>
-						</div>
-						<div class="account-transaction-breakdown">
-							<h4>Number of Transaction</h4>
-							<div class="account-transaction-amount">
-								129
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="overview">
-					<h2>Overview</h2>
-					<div class="overview-items">
-						<div class="overview-item">
-							<p class="transact-history">Latest Transaction</p>
-							<div class="transact-tables">
-								<table>
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Name</th>
-											<th>Type</th>
-											<th>Amount</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Sept 12, 21</td>
-											<td>Adedeji Oluwadamisola</td>
-											<td>Transfer</td>
-											<td>$12,000</td>
-										</tr>
-										<tr>
-											<td>Sept 12, 21</td>
-											<td>Adedeji Oluwadamisola</td>
-											<td>Transfer</td>
-											<td>$12,000</td>
-										</tr>
-									</tbody>
-								</table>
-
-								<button><a href="#">View More</a></button>
-							</div>
-
-						</div>
-
-						<div class="overview-item">
-							<p class="converter-text">Currency Converter</p>
-							<div class="converter-overview">
-								<p>Convert from naira to any other currency.</p>
-								<div class="converter-action">
-									<input type="text" name="amount">
-									<button>Convert</button>
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
+{% extends 'html/wallet/base.html' %} 
+{% block content %}
+<div class="content-body">
+	<div class="balance">
+		<p class="wallet-text">Account Details </p>
+		<div class="wallet-info">
+			<p>Wallet Number</p>
+			<h4>{{ wallet_number }}</h4>
+		</div>
+		<div class="balance-action">
+			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
+			<div class="balance-button-group">
+				<a href="send-fund"><button>Send</button></a>
+				<a href="receive-fund"><button id="receive_fund_btn">Receive</button></a>
 			</div>
 		</div>
 	</div>
-
-
-
-
-	<!-- Receive Funds Overlay -->
-	<div id="receiveFundOverlay" class="receive-overlay">
-		<a id="close_receive_btn" class="close_overlay_btn">&times;</a>
-
+	<div class="wallet-transaction">
+		<!-- Wallet Transactions -->
 	</div>
-
-
-
-	<script src="{% static 'js/script.js' %}"></script>
-</body>
-
-</html>
+</div>
+{% endblock content %}

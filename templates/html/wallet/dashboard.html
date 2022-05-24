@@ -1,5 +1,8 @@
+
 {% extends 'html/wallet/base.html' %} 
 {% block content %}
+
+{% load humanize %}
 <div class="content-body">
 	<div class="balance">
 		<p class="wallet-text">Account Details </p>
@@ -10,8 +13,8 @@
 		<div class="balance-action">
 			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
 			<div class="balance-button-group">
-				<button>Send</button>
-				<button id="receive_fund_btn">Receive</button>
+				<a href="send-fund"><button>Send</button></a>
+				<a href="receive-fund"><button id="receive_fund_btn">Receive</button></a>
 			</div>
 		</div>
 	</div>
@@ -21,19 +24,19 @@
 			<div class="account-transaction-breakdown">
 				<h4>Total Amount Sent</h4>
 				<div class="account-transaction-amount">
-					$2,000
+					{{ amount_sent|floatformat:2|intcomma }}
 				</div>
 			</div>
 			<div class="account-transaction-breakdown">
 				<h4>Total Amount Received</h4>
 				<div class="account-transaction-amount">
-					$23,122
+					${{  amount_received|floatformat:2|intcomma }}
 				</div>
 			</div>
 			<div class="account-transaction-breakdown">
 				<h4>Number of Transaction</h4>
 				<div class="account-transaction-amount">
-					129
+					{{ transaction_times }}
 				</div>
 			</div>
 		</div>
@@ -44,6 +47,7 @@
 			<div class="overview-item">
 				<p class="transact-history">Latest Transaction</p>
 				<div class="transact-tables">
+					{% if transactions %}
 					<table>
 						<thead>
 							<tr>
@@ -54,22 +58,23 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Sept 12, 21</td>
-								<td>Adedeji Oluwadamisola</td>
-								<td>Transfer</td>
-								<td>$12,000</td>
-							</tr>
-							<tr>
-								<td>Sept 12, 21</td>
-								<td>Adedeji Oluwadamisola</td>
-								<td>Transfer</td>
-								<td>$12,000</td>
-							</tr>
+								{% for transaction in transactions %}
+								<tr>
+									<td>{{ transaction.date }}</td>
+									<td>Adedeji Oluwadamisola</td>
+									<td>{{ transaction.type }}</td>
+									<td>${{ transaction.amount }}</td>
+								</tr>
+								{% endfor %}
+							
 						</tbody>
 					</table>
-
 					<button><a href="#">View More</a></button>
+					{% else %}
+						<div>
+							<p>No Transaction Yet</p>
+						</div>
+					{% endif %}
 				</div>
 
 			</div>

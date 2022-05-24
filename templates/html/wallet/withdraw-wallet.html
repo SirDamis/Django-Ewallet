@@ -5,22 +5,46 @@
 		<p class="wallet-text">Account Details </p>
 		<div class="wallet-info">
 			<p>Wallet Number</p>
-			<h4>{{ user.uuid.hex }}</h4>
+			<h4>{{ wallet_number }}</h4>
 		</div>
 		<div class="balance-action">
 			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
 			<div class="balance-button-group">
-				<button>Send</button>
-				<button id="receive_fund_btn">Receive</button>
+				<a href="send-fund"><button>Send</button></a>
+				<a href="receive-fund"><button id="receive_fund_btn">Receive</button></a>
 			</div>
 		</div>
 	</div>
 	<div class="wallet-transaction">
 		<form action="/wallet/witdraw-wallet/" method="POST">
 			{% csrf_token %}
-			<input type="decimal" id="amount" name="amount" placeholder="Amount"> <br>
+
+			<div class="form-group">
+				<label>Account Bank: </label>
+				<br>
+				<input type="text" id="account-bank" name="account_bank" placeholder="Account Bank"> <br>
+			</div>
 			
-			<p><button type="submit" id="submit">Send Fund</button></p>
+			<div class="form-group">
+				<label>Account Number: </label>
+				<br>
+				<input type="text" id="account-number" name="account_number" placeholder="Account Number"> <br>
+			</div>
+			
+			<div class="form-group">
+				<label>Amount: </label>
+				<br>
+				<input type="text" id="amount" name="amount" placeholder="Amount"> <br>
+			</div>
+			
+			<div class="form-group">
+				<label>Narration: </label>
+				<br>
+				<textarea name="" id="narration"  name="narration" rows="5"></textarea> <br>
+		
+			</div>
+			
+			<p><button type="submit" id="submit">Withdraw</button></p>
 		</form>
 	</div>
 	
