@@ -242,14 +242,46 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/withdraw-wallet.html'
 
+    def load_bank_list(self):
+        """
+        Fetch bank details for all banks in Nigeria
+        """
+
+        url = 'https://api.flutterwave.com/v3/banks/NG'
+        response_data = requests.get(url, 
+            headers={'Authorization': 'Bearer '+FLWSECK_TEST}
+        )
+        return response_data.json()['data']
+
+    def account_number_verification(self, account_number, account_bank):
+        """
+        Verify if the account numbe submitted is valid
+        """
+        response = requests.post(
+            'https://api.flutterwave.com/v3/accounts/resolve', 
+            headers={
+                'Authorization': 'Bearer '+FLWSECK_TEST,
+                'Accept': 'application/json'
+            },
+            json={
+                "account_number": account_number,
+                "account_bank": account_bank
+            }
+        ).json()
+        return response
+
     def get_context_data(self, **kwargs):
+        bank_list = self.load_bank_list()
+
+        
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet =  Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
+        context['bank_list'] = bank_list
         return context
 
-    def post():
+    def post(self,  request, *args, **kwargs):
         tx_ref = generateTransactionReference()
         account_bank = request.POST.get('account_bank')
         account_number = request.POST.get('account_number')
@@ -266,8 +298,15 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
             "callback_url": "https://webhook.site/b3e505b0-fe02-430e-a538-22bbbce8ce0d",
             "debit_currency": "NGN"
         }
-        res = rave.Transfer.initate(details)
-        print(res)
+
+        accountno_verify_res = self.account_number_verification(account_number, account_bank)
+        if accountno_verify_res['status'] == 'error':
+            return HttpResponse('Error')
+        elif accountno_verify_res['status'] == 'success':
+            rave = raveSetup()
+            res = rave.Transfer.initate(details)
+            print(res)
+
         # To do:
         # if Transfer is successful (withdrawal) 
         # TSave tp transaction history table

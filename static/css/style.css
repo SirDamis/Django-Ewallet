@@ -809,15 +809,16 @@ button:focus {
   border-radius: 5px;
   border: 2px solid #ccc;
   filter: none;
-  margin: 5px 0  5px 0;
+  margin: 5px 0 5px 0;
 }
 .dashboard-container
   .content
   .content-body
   .wallet-transaction
-  form .form-group{
-      padding-bottom: 8px;
-  }
+  form
+  .form-group {
+  padding-bottom: 8px;
+}
 .dashboard-container
   .content
   .content-body
@@ -832,10 +833,10 @@ button:focus {
   text-align: center;
   margin-top: 10px;
 }
-.dashboard-container .content .content-body .wallet-transaction form textarea{
-    width: 100%;
-    border-radius: 5px;
-    border: 2px solid #ccc;
+.dashboard-container .content .content-body .wallet-transaction form textarea {
+  width: 100%;
+  border-radius: 5px;
+  border: 2px solid #ccc;
 }
 .dashboard-container .content .content-body .wallet-transaction form button {
   background-color: #043774;
@@ -941,6 +942,46 @@ p.fund.error {
 }
 .receive-overlay .close_overlay_btn:hover {
   cursor: pointer;
+}
+
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.select {
+  /* Reset Select */
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  /* Personalize */
+
+  border: 2px solid #ccc;
+  padding: 0 10px;
+  color: black;
+  background-color: transparent;
+  cursor: pointer;
+  width: 100%;
+  line-height: 35px;
+  border-radius: 5px;
+  margin: 5px 0 5px 0;
+  /* height: 3em; */
+  overflow: hidden;
+}
+/* Arrow */
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1em;
+  background-color: #34495e;
+  transition: 0.25s all ease;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #f39c12;
 }
 
 /* Mobile Responsiveness */
