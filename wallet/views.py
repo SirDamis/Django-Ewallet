@@ -1,4 +1,5 @@
 from decimal import Decimal
+import json
 from django import template
 from django.http import HttpResponse, request
 from django.views.generic import TemplateView
@@ -15,6 +16,9 @@ from django.template.loader import render_to_string
 
 from wallet.models import TransactionHistory, Wallet
 
+
+
+rave = raveSetup()
 
 class RecordTransactionHistory:
     def __init__(self, reference, details, type, success, by, to, amount):
@@ -249,7 +253,9 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
 
         url = 'https://api.flutterwave.com/v3/banks/NG'
         response_data = requests.get(url, 
-            headers={'Authorization': 'Bearer '+FLWSECK_TEST}
+            headers={
+                'Authorization': 'Bearer '+FLWSECK_TEST
+            }
         )
         return response_data.json()['data']
 
@@ -272,6 +278,7 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         bank_list = self.load_bank_list()
+        print(self.withdrawal_charge_fee())
 
         
         context = super().get_context_data(**kwargs)
@@ -280,6 +287,24 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
         context['wallet_number'] = auth_wallet.number.hex
         context['bank_list'] = bank_list
         return context
+
+    def withdrawal_charge_fee(self):
+        # url = 'https://api.flutterwave.com/v3/transfers/fee'
+        # response_data = requests.get(url, 
+        #     headers={
+        #         'Authorization': 'Bearer '+FLWSECK_TEST
+        #     },
+        #     json={
+        #         "type": "account",
+        #         "amount": 2700,
+        #         "currency": "EUR"
+        #     }
+        # )
+        res2 = rave.Transfer.getFee("EUR")
+        print(res2)
+        # print(response_data.json())
+        # return response_data.json()
+  
 
     def post(self,  request, *args, **kwargs):
         tx_ref = generateTransactionReference()
@@ -303,17 +328,18 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
         if accountno_verify_res['status'] == 'error':
             return HttpResponse('Error')
         elif accountno_verify_res['status'] == 'success':
+            details['beneficiary_name'] = accountno_verify_res['data']['account_name']
             rave = raveSetup()
-            res = rave.Transfer.initate(details)
+            res = rave.Transfer.initiate(details)
             print(res)
 
-        # To do:
-        # if Transfer is successful (withdrawal) 
-        # TSave tp transaction history table
-        # create a weebhook to track status,
-        # Charge user account and move to pendingwithdrawal table
-        # else
-        # Prompt user
+            # To do:
+            # if Transfer is successful (withdrawal) 
+            # TSave tp transaction history table
+            # create a weebhook to track status,
+            # Charge user account and move to pendingwithdrawal table
+            # else
+            # Prompt user
 
 
 

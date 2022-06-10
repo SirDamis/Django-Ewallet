@@ -1001,14 +1001,15 @@ select::-ms-expand {
   }
 
   .dashboard-container .content .content-body .balance .wallet-text {
-    font-size: 14px;
+    font-size: 12px;
   }
   .dashboard-container .content .content-body .wallet-info {
-    font-size: 14px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
   }
   .dashboard-container .content .content-body .balance-action {
     flex-direction: column;
-    font-size: 14px;
+    font-size: 12px;
     margin: 10px 0 0 0;
   }
   .dashboard-container .content .content-body .balance-action span {
@@ -1028,7 +1029,7 @@ select::-ms-expand {
     margin: 10px 0;
   }
   .dashboard-container .content .content-body .account p {
-    font-size: 14px;
+    font-size: 12px;
   }
   .dashboard-container .content .content-body .account-transactions {
     flex-direction: column;
@@ -1047,7 +1048,7 @@ select::-ms-expand {
     .content-body
     .account-transactions
     .account-transaction-amount {
-    font-size: 15px;
+    font-size: 12px;
   }
 
   .dashboard-container .content .content-body .overview {
@@ -1055,6 +1056,7 @@ select::-ms-expand {
   }
   .dashboard-container .content .content-body .overview h2 {
     padding: 10px;
+    font-size: 14px;
   }
   .dashboard-container .content .content-body .overview-items {
     grid-template-columns: 1fr;
@@ -1071,9 +1073,36 @@ select::-ms-expand {
     .overview-items
     .overview-item
     .transact-history {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
   }
+
+  .dashboard-container .content .content-body .overview-item .transact-tables {
+    font-size: 12px;
+  }
+  .dashboard-container
+    .content
+    .content-body
+    .overview-item
+    .transact-tables
+    table
+    tr {
+    line-height: 20px;
+  }
+
+  
+  .dashboard-container .content .content-body .wallet-transaction form {
+    width: 100%;
+    border-radius: 15px;
+    margin: -10px 0;
+  }
+  .dashboard-container .content .content-body .wallet-transaction form input[type="text"] {
+    font-size: 12px;
+}
+.dashboard-container .content .content-body .wallet-transaction form input {
+    width: 100%;
+    line-height: 30px;
+}
 }
 
 /* Authentication */
