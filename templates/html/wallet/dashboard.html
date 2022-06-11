@@ -3,7 +3,6 @@
 {% block content %}
 
 {% load humanize %}
-<div class="content-body">
 	<div class="balance">
 		<p class="wallet-text">Account Details </p>
 		<div class="wallet-info">
@@ -24,19 +23,19 @@
 			<div class="account-transaction-breakdown">
 				<h4>Total Amount Sent</h4>
 				<div class="account-transaction-amount">
-					₦{{ amount_sent|floatformat:2|intcomma }}
+					<p>₦{{ amount_sent|floatformat:2|intcomma }}</p>
 				</div>
 			</div>
 			<div class="account-transaction-breakdown">
 				<h4>Total Amount Received</h4>
 				<div class="account-transaction-amount">
-					₦{{  amount_received|floatformat:2|intcomma }}
+					<p>₦{{  amount_received|floatformat:2|intcomma }}</p>
 				</div>
 			</div>
 			<div class="account-transaction-breakdown">
 				<h4>Number of Transaction</h4>
 				<div class="account-transaction-amount">
-					{{ transaction_times }}
+					<p>{{ transaction_times }} </p>
 				</div>
 			</div>
 		</div>
@@ -78,19 +77,6 @@
 				</div>
 
 			</div>
-
-			<div class="overview-item">
-				<p class="converter-text">Currency Converter</p>
-				<div class="converter-overview">
-					<p>Convert from naira to any other currency.</p>
-					<div class="converter-action">
-						<input type="text" name="amount">
-						<button>Convert</button>
-					</div>
-				</div>
-
-			</div>
 		</div>
 	</div>
-</div>
 {% endblock content %}

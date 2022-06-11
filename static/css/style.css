@@ -587,6 +587,9 @@ button:focus {
   width: 30px;
   border-radius: 30px;
 }
+.dashboard-container .content .content-body  .menu-bar{
+  display: none;
+}
 
 .dashboard-container .content .content-body .balance {
   background: #fff;
@@ -985,8 +988,89 @@ select::-ms-expand {
 }
 
 /* Mobile Responsiveness */
-@media screen and (max-width: 460px) {
-  .sidebar {
+@media screen and (max-width: 1119px) {
+  .dashboard-container .sidebar {
+    width: 20%;
+  }
+
+  .dashboard-container .content {
+    width: 80%;
+    left: 20%;
+  }
+}
+@media screen and (max-width: 884px) {
+  .dashboard-container .sidebar {
+    width: 23%;
+  }
+
+  .dashboard-container .content {
+    width: 77%;
+    left: 23%;
+  }
+}
+@media screen and (max-width: 667px) {
+  .dashboard-container .sidebar {
+    width: 27%;
+  }
+
+  .dashboard-container .content {
+    width: 73%;
+    left: 27%;
+  }
+}
+@media screen and (max-width: 605px) {
+  .menu-bar{
+    width: 100%;
+    height: 80px;
+    display: flex !important;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+
+  }
+  .menu-bar .btn-scroll{
+    background-color: #fff;
+    color: #999;
+    padding: 5px 8px;
+    border: 0;
+    border-radius: 50%;
+    margin: 0 5px;
+    z-index: 1;
+    cursor: pointer;
+    box-shadow: 0 0 10px #999;
+    transition: 1s;
+  }
+  .menu-icons-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    transition: 0.5s all ease-out;
+
+  }
+  .menu-bar #btn-scroll-right{
+    justify-self: flex-end;
+  }
+  .icon-circle{
+    width: 60px;
+    height: 60px;
+    margin: 15px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+  .icon-circle img{
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+  }
+
+
+  .dashboard-container .sidebar {
     display: none;
   }
   .dashboard-container .content {
@@ -994,6 +1078,9 @@ select::-ms-expand {
     position: relative;
     left: 0%;
   }
+}
+@media screen and (max-width: 460px) {
+  
 
   .dashboard-container .content .content-body .balance {
     border-radius: 15px;
@@ -1001,15 +1088,15 @@ select::-ms-expand {
   }
 
   .dashboard-container .content .content-body .balance .wallet-text {
-    font-size: 12px;
+    font-size: 13px;
   }
   .dashboard-container .content .content-body .wallet-info {
-    font-size: 12px;
+    font-size: 13px;
     overflow-wrap: anywhere;
   }
   .dashboard-container .content .content-body .balance-action {
     flex-direction: column;
-    font-size: 12px;
+    font-size: 13px;
     margin: 10px 0 0 0;
   }
   .dashboard-container .content .content-body .balance-action span {
@@ -1047,8 +1134,8 @@ select::-ms-expand {
     .content
     .content-body
     .account-transactions
-    .account-transaction-amount {
-    font-size: 12px;
+    .account-transaction-amount p{
+    font-size: 13px;
   }
 
   .dashboard-container .content .content-body .overview {
