@@ -17,8 +17,8 @@ from django.template.loader import render_to_string
 from wallet.models import TransactionHistory, Wallet
 
 
-
 rave = raveSetup()
+
 
 class RecordTransactionHistory:
     def __init__(self, reference, details, type, success, by, to, amount):
@@ -49,13 +49,15 @@ class WalletView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         transaction_times = TransactionHistory.objects.filter(by=auth).count()
-        amount_sent = TransactionHistory.objects.filter(by=auth, success=True, type='TW').aggregate(total_amount_sent=Sum('amount'))
-        amount_received = TransactionHistory.objects.filter(to=auth, success=True, type='TW').aggregate(total_amount_received=Sum('amount'))
-        transactions = (TransactionHistory.objects.filter(by=auth, success=True).order_by('-date')[:5])
-        
-        
+        amount_sent = TransactionHistory.objects.filter(
+            by=auth, success=True, type='TW').aggregate(total_amount_sent=Sum('amount'))
+        amount_received = TransactionHistory.objects.filter(
+            to=auth, success=True, type='TW').aggregate(total_amount_received=Sum('amount'))
+        transactions = (TransactionHistory.objects.filter(
+            by=auth, success=True).order_by('-date')[:5])
+
         context['transactions'] = transactions
         context['amount_sent'] = amount_sent['total_amount_sent'] if amount_sent['total_amount_sent'] else 0
         context['amount_received'] = amount_received['total_amount_received'] if amount_received['total_amount_received'] else 0
@@ -64,7 +66,6 @@ class WalletView(LoginRequiredMixin, TemplateView):
         context['wallet_number'] = auth_wallet.number.hex
 
         return context
-
 
 
 class SendFundView(LoginRequiredMixin, TemplateView):
@@ -78,10 +79,9 @@ class SendFundView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
         return context
-    
 
     def post(self, request, *args, **kwargs):
         wallet_number = request.POST.get('wallet_number')
@@ -90,15 +90,16 @@ class SendFundView(LoginRequiredMixin, TemplateView):
 
         auth = self.request.user
         try:
-            receiver_wallet = Wallet.objects.filter(number=wallet_number).first()
+            receiver_wallet = Wallet.objects.filter(
+                number=wallet_number).first()
             sender_wallet = Wallet.objects.filter(user=auth).first()
             if sender_wallet.balance >= Decimal(amount) and Decimal(amount) >= 0:
                 tx_ref = generateTransactionReference()
-                receiver_wallet.balance  += Decimal(amount)
+                receiver_wallet.balance += Decimal(amount)
                 sender_wallet.balance -= Decimal(amount)
                 receiver_wallet.save()
                 sender_wallet.save()
-                
+
                 record_transaction = RecordTransactionHistory(
                     reference=tx_ref,
                     details=details,
@@ -109,23 +110,25 @@ class SendFundView(LoginRequiredMixin, TemplateView):
                     to=receiver_wallet.user
                 )
                 record_transaction.save()
-                
+
             elif float(amount) < 0:
                 context = {'error_msg': 'Enter positive amount'}
-                rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                rendered = render_to_string(
+                    'html/wallet/failed-fund.html', context=context)
                 return HttpResponse(rendered)
 
             else:
                 context = {'error_msg': 'Insufficient Fund'}
-                rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                rendered = render_to_string(
+                    'html/wallet/failed-fund.html', context=context)
                 return HttpResponse(rendered)
-
 
         except ValidationError:
             return HttpResponse('Wallet Does Not exist')
-        
+
         context = {'error_msg': 'Deposit succcessful'}
-        rendered = render_to_string('html/wallet/successful-fund.html', context=context)
+        rendered = render_to_string(
+            'html/wallet/successful-fund.html', context=context)
         return HttpResponse(rendered)
 
 
@@ -136,7 +139,7 @@ class ReceiveFundView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
@@ -145,6 +148,7 @@ class ReceiveFundView(LoginRequiredMixin, TemplateView):
     # -Share to Whatsapp, Twitter
     # -Custom Pay URL
 
+
 class FundWalletProccessView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/successful-fund.html'
@@ -152,24 +156,25 @@ class FundWalletProccessView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
-
     # http://127.0.0.1:8000/wallet/fund-wallet/succes?status=successful&tx_ref=WP-1653008174132&transaction_id=3393442
+
     def get(self, request, *args, **kwargs):
         print(self.request.GET.get('status'))
-        if (self.request.GET.get('status') == 'successful') and (self.request.GET.get('tx_ref')) and  (self.request.GET.get('transaction_id')):
+        if (self.request.GET.get('status') == 'successful') and (self.request.GET.get('tx_ref')) and (self.request.GET.get('transaction_id')):
             tx_ref = self.request.GET.get('tx_ref')
-            transactionDetails = TransactionHistory.objects.filter(reference=tx_ref).first()
+            transactionDetails = TransactionHistory.objects.filter(
+                reference=tx_ref).first()
             auth = self.request.user
             wallet = Wallet.objects.filter(user=auth).first()
-          
+
             try:
-                response =  raveSetup().Card.verify(tx_ref)
+                response = raveSetup().Card.verify(tx_ref)
                 if response['transactionComplete'] == True and response['amount'] == float(transactionDetails.amount) and transactionDetails.success == False:
-                    wallet.balance  += Decimal(transactionDetails.amount)
+                    wallet.balance += Decimal(transactionDetails.amount)
                     wallet.save()
 
                     transactionDetails.success = True
@@ -177,11 +182,13 @@ class FundWalletProccessView(LoginRequiredMixin, TemplateView):
                 else:
                     # To do render the payment information
                     context = {'error_msg': 'Transaction Already Performed'}
-                    rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                    rendered = render_to_string(
+                        'html/wallet/failed-fund.html', context=context)
                     return HttpResponse(rendered)
             except RaveExceptions.TransactionVerificationError:
                 context = {'error_msg': 'Unable to verify transaction'}
-                rendered = render_to_string('html/wallet/failed-fund.html', context=context)
+                rendered = render_to_string(
+                    'html/wallet/failed-fund.html', context=context)
                 return HttpResponse(rendered)
             return super().get(self, request, *args, **kwargs)
         else:
@@ -198,7 +205,7 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
@@ -218,7 +225,7 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
             }
         }
         response_data = requests.post(
-            "https://api.flutterwave.com/v3/payments", 
+            "https://api.flutterwave.com/v3/payments",
             headers={'Authorization': 'Bearer '+FLWSECK_TEST},
             json=json
         ).json()
@@ -226,7 +233,7 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
         if response_data['status'] == 'success':
             record_transaction = RecordTransactionHistory(
                 reference=tx_ref,
-                amount = amount,
+                amount=amount,
                 details='Fund Wallet',
                 type='FW',
                 success=False,
@@ -235,8 +242,7 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
             )
             record_transaction.save()
             return redirect(response_data['data']['link'])
-        return HttpResponse('Error') #Create error page
-
+        return HttpResponse('Error')  # Create error page
 
 
 class WithdrawWalletView(LoginRequiredMixin, TemplateView):
@@ -246,17 +252,30 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/withdraw-wallet.html'
 
+    def charge(self):
+        response_data = requests.get(
+            "https://api.flutterwave.com/v3/transfers/rates",
+            headers={'Authorization': 'Bearer '+FLWSECK_TEST},
+            json={
+                'amount': 100,
+                'destination_currency': 'NGN', 
+                'source_currency': 'NGN'
+            }
+        ).json()
+        print(response_data)
+        return response_data
+
     def load_bank_list(self):
         """
         Fetch bank details for all banks in Nigeria
         """
 
         url = 'https://api.flutterwave.com/v3/banks/NG'
-        response_data = requests.get(url, 
-            headers={
-                'Authorization': 'Bearer '+FLWSECK_TEST
-            }
-        )
+        response_data = requests.get(url,
+                                     headers={
+                                         'Authorization': 'Bearer '+FLWSECK_TEST
+                                     }
+                                     )
         return response_data.json()['data']
 
     def account_number_verification(self, account_number, account_bank):
@@ -264,7 +283,7 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
         Verify if the account numbe submitted is valid
         """
         response = requests.post(
-            'https://api.flutterwave.com/v3/accounts/resolve', 
+            'https://api.flutterwave.com/v3/accounts/resolve',
             headers={
                 'Authorization': 'Bearer '+FLWSECK_TEST,
                 'Accept': 'application/json'
@@ -278,19 +297,19 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         bank_list = self.load_bank_list()
-        print(self.withdrawal_charge_fee())
+        print(self.charge())
+        # print(self.withdrawal_charge_fee())
 
-        
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
-        context['bank_list'] = bank_list
+        context['bank_list'] = sorted(bank_list, key=lambda d: d['name'])
         return context
 
     def withdrawal_charge_fee(self):
         # url = 'https://api.flutterwave.com/v3/transfers/fee'
-        # response_data = requests.get(url, 
+        # response_data = requests.get(url,
         #     headers={
         #         'Authorization': 'Bearer '+FLWSECK_TEST
         #     },
@@ -304,7 +323,6 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
         print(res2)
         # print(response_data.json())
         # return response_data.json()
-  
 
     def post(self,  request, *args, **kwargs):
         tx_ref = generateTransactionReference()
@@ -324,7 +342,8 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
             "debit_currency": "NGN"
         }
 
-        accountno_verify_res = self.account_number_verification(account_number, account_bank)
+        accountno_verify_res = self.account_number_verification(
+            account_number, account_bank)
         if accountno_verify_res['status'] == 'error':
             return HttpResponse('Error')
         elif accountno_verify_res['status'] == 'success':
@@ -334,14 +353,12 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
             print(res)
 
             # To do:
-            # if Transfer is successful (withdrawal) 
+            # if Transfer is successful (withdrawal)
             # TSave tp transaction history table
             # create a weebhook to track status,
             # Charge user account and move to pendingwithdrawal table
             # else
             # Prompt user
-
-
 
 
 class TransactionView(LoginRequiredMixin, TemplateView):
@@ -351,6 +368,6 @@ class TransactionView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
-        auth_wallet =  Wallet.objects.filter(user=auth).first()
+        auth_wallet = Wallet.objects.filter(user=auth).first()
         context['wallet_number'] = auth_wallet.number.hex
         return context

@@ -32,6 +32,7 @@ button:focus {
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
+  height: 70px;
 }
 .navbar .container .hamburger {
   display: none;
@@ -1019,7 +1020,7 @@ select::-ms-expand {
   }
 }
 @media screen and (max-width: 605px) {
-  .menu-bar{
+  .content-body .menu-bar{
     width: 100%;
     height: 80px;
     display: flex !important;
@@ -1030,7 +1031,7 @@ select::-ms-expand {
     overflow: hidden;
 
   }
-  .menu-bar .btn-scroll{
+  .content-body .menu-bar .btn-scroll{
     background-color: #fff;
     color: #999;
     padding: 5px 8px;
@@ -1042,7 +1043,7 @@ select::-ms-expand {
     box-shadow: 0 0 10px #999;
     transition: 1s;
   }
-  .menu-icons-container{
+  .content-body .menu-bar  .menu-icons-container{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -1051,10 +1052,10 @@ select::-ms-expand {
     transition: 0.5s all ease-out;
 
   }
-  .menu-bar #btn-scroll-right{
+  .content-body .menu-bar #btn-scroll-right{
     justify-self: flex-end;
   }
-  .icon-circle{
+  .content-body .menu-bar .menu-icons-container .icon-circle{
     width: 60px;
     height: 60px;
     margin: 15px 10px;
@@ -1063,7 +1064,7 @@ select::-ms-expand {
     align-items: center;
     border-radius: 50%;
   }
-  .icon-circle img{
+  .content-body .menu-bar .menu-icons-container .icon-circle img{
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -1326,5 +1327,76 @@ select::-ms-expand {
   }
   .auth .auth-card {
     width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+/* The Overlay (background) */
+.overlay {
+  /* Height & width depends on how you want to reveal the overlay (see JS below) */   
+  height: 100%;
+  width: 0;
+  position: fixed; /* Stay in place */
+  z-index: 10; /* Sit on top */
+  left: 0;
+  top: 70px;
+  background-color: #fafafafa;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+  position: relative;
+  top: 30px; 
+  width: 100%;
+  text-align: center; /* Centered text/links */
+  margin-top: 10px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+}
+
+/* The navigation links inside the overlay */
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: black;
+  display: block; /* Display block instead of inline */
+  transition: 0.3s; /* Transition effects on hover (color) */
+}
+
+/* When you mouse over the navigation links, change their color */
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+/* Position the close button (top right corner) */
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 10px;
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+  .overlay a {
+    font-size: 20px
+  }
+}
+@media only screen and (max-width: 991px) {
+  .overlay a {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .overlay a:hover{
+    color: #043774;
   }
 }
