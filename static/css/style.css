@@ -1054,15 +1054,35 @@ select::-ms-expand {
   }
   .content-body .menu-bar #btn-scroll-right{
     justify-self: flex-end;
+    transition: 0.5s all ease-out;
   }
   .content-body .menu-bar .menu-icons-container .icon-circle{
     width: 60px;
     height: 60px;
-    margin: 15px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 15px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
+  }
+  .content-body .menu-bar .menu-icons-container .icon-circle div:hover{
+    background-color: #043774;
+    transition: 0.5s all ease-out;
+    padding: 10px 10px;
+    border-radius: 7px;
+  }
+  .content-body .menu-bar .menu-icons-container .icon-circle div{
+    text-align: center;
+  }
+  .content-body .menu-bar .menu-icons-container .icon-circle:hover a{
+    color: #fff;
+  }
+  .content-body .menu-bar .menu-icons-container .icon-circle i{
+    color: #043774;
+  }
+  .content-body .menu-bar .menu-icons-container .icon-circle:hover i{
+    color: #fff;
   }
   .content-body .menu-bar .menu-icons-container .icon-circle img{
     width: 52px;
