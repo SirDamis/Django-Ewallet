@@ -22,7 +22,7 @@ from django.utils.http import urlsafe_base64_decode
 from ewallet.utils import account_activation_token
 from .mixins import NotVerifiedDisallowedMixin
 
-
+from django.contrib.sites.shortcuts import get_current_site
 
 
 class HomeView(TemplateView):
@@ -38,6 +38,9 @@ class RegisterView(SuccessMessageMixin, CreateView):
     redirect_authenticated_user = True
 
     def get(self, request, *args, **kwargs):
+
+        current_site = get_current_site(request)
+        print(current_site)
         if request.user.is_authenticated:
             return redirect('wallet')
         return super(RegisterView, self).get(self, request, *args, **kwargs)

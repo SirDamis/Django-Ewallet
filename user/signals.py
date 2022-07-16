@@ -18,7 +18,7 @@ from django.contrib.sites.models import Site
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def send_verification_email(sender, instance, created, **kwargs):
     if created:
-        current_site = 'www.hello.com'
+        current_site = Site.objects.get_current().domain
         mail_subject = 'Activate your blog account.'
         message = render_to_string('emails/activate_account.html', {
             'user': instance,
@@ -27,8 +27,7 @@ def send_verification_email(sender, instance, created, **kwargs):
             'token':account_activation_token.make_token(instance),
         })
         to_email = instance.email
-        print(to_email)
-        print(message)
+
         email = EmailMessage(
                     mail_subject, message, to=[to_email]
         )
