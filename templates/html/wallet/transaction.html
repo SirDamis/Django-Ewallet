@@ -1,20 +1,5 @@
 {% extends 'html/wallet/base.html' %} 
 {% block content %}
-<div class="content-body">
-	<div class="balance">
-		<p class="wallet-text">Account Details </p>
-		<div class="wallet-info">
-			<p>Wallet Number</p>
-			<h4>{{ wallet_number }}</h4>
-		</div>
-		<div class="balance-action">
-			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
-			<div class="balance-button-group">
-				<a href="send-fund"><button>Send</button></a>
-				<a href="receive-fund"><button id="receive_fund_btn">Receive</button></a>
-			</div>
-		</div>
-	</div>
 	<div class="wallet-transaction">
 		<!-- Wallet Transactions -->
 	</div>

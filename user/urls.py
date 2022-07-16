@@ -1,9 +1,16 @@
 from unicodedata import name
 from django.urls import path
 
-from .views import HomeView, RegisterView
+from .views import (
+    HomeView, 
+    RegisterView,
+    AccountNotVerifiedView, 
+    ActivateAccount
+)
 from django.conf.urls.static import static
 from django.contrib.auth import views
+
+from .forms import EmailValidationOnForgotPassword
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -19,22 +26,40 @@ urlpatterns = [
         views.PasswordChangeDoneView.as_view(),
         name="password_change_done",
     ),
-    path("password-reset/", views.PasswordResetView.as_view(
+    path("password_reset/", views.PasswordResetView.as_view(
+        form_class=EmailValidationOnForgotPassword,
         template_name='html/auth/password_reset.html', email_template_name='emails/password_reset_link.html'
     ), name="password_reset"),
     path(
         "password_reset/done/",
-        views.PasswordResetDoneView.as_view(),
+        views.PasswordResetDoneView.as_view(
+            template_name='html/auth/password_reset_done.html',
+        ),
         name="password_reset_done",
     ),
     path(
         "reset/<uidb64>/<token>/",
-        views.PasswordResetConfirmView.as_view(),
+        views.PasswordResetConfirmView.as_view(
+            template_name='html/auth/password_reset_confirm.html', 
+        ),
         name="password_reset_confirm",
     ),
     path(
         "reset/done/",
-        views.PasswordResetCompleteView.as_view(),
+        views.PasswordResetCompleteView.as_view(
+            template_name='html/auth/password_reset_confirm_done.html'
+        ),
         name="password_reset_complete",
+    ),
+    path(
+        "account/not-verified/",
+        AccountNotVerifiedView.as_view(),
+        name="account_not_verified",
+    ),
+
+    path(
+        'activate/<uidb64>/<token>/', 
+        ActivateAccount.as_view(), 
+        name='activate'
     ),
 ]

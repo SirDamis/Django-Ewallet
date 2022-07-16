@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 
 from wallet.models import TransactionHistory, Wallet
 
+from user.mixins import VerificationRequiredMixin
 
 rave = raveSetup()
 
@@ -42,7 +43,7 @@ class RecordTransactionHistory:
         )
 
 
-class WalletView(LoginRequiredMixin, TemplateView):
+class WalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/dashboard.html'
 
@@ -68,7 +69,7 @@ class WalletView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class SendFundView(LoginRequiredMixin, TemplateView):
+class SendFundView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     """
     Send fund to another wallet.
     Allows for bunk transfer
@@ -132,7 +133,7 @@ class SendFundView(LoginRequiredMixin, TemplateView):
         return HttpResponse(rendered)
 
 
-class ReceiveFundView(LoginRequiredMixin, TemplateView):
+class ReceiveFundView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/receive-fund.html'
 
@@ -149,7 +150,7 @@ class ReceiveFundView(LoginRequiredMixin, TemplateView):
     # -Custom Pay URL
 
 
-class FundWalletProccessView(LoginRequiredMixin, TemplateView):
+class FundWalletProccessView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/successful-fund.html'
 
@@ -195,7 +196,7 @@ class FundWalletProccessView(LoginRequiredMixin, TemplateView):
             return redirect('fund-wallet')
 
 
-class FundWalletView(LoginRequiredMixin, TemplateView):
+class FundWalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     """
     Fund the user wallet
     """
@@ -242,10 +243,10 @@ class FundWalletView(LoginRequiredMixin, TemplateView):
             )
             record_transaction.save()
             return redirect(response_data['data']['link'])
-        return HttpResponse('Error')  # Create error page
+        return HttpResponse('Error') 
 
 
-class WithdrawWalletView(LoginRequiredMixin, TemplateView):
+class WithdrawWalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     """
     Withdraw from user wallet to any bank account
     """
@@ -262,7 +263,6 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
                 'source_currency': 'NGN'
             }
         ).json()
-        print(response_data)
         return response_data
 
     def load_bank_list(self):
@@ -272,10 +272,10 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
 
         url = 'https://api.flutterwave.com/v3/banks/NG'
         response_data = requests.get(url,
-                                     headers={
-                                         'Authorization': 'Bearer '+FLWSECK_TEST
-                                     }
-                                     )
+                            headers={
+                                'Authorization': 'Bearer '+FLWSECK_TEST
+                            }
+                            )
         return response_data.json()['data']
 
     def account_number_verification(self, account_number, account_bank):
@@ -361,7 +361,7 @@ class WithdrawWalletView(LoginRequiredMixin, TemplateView):
             # Prompt user
 
 
-class TransactionView(LoginRequiredMixin, TemplateView):
+class TransactionView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'html/wallet/transaction.html'
 

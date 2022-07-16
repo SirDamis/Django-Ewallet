@@ -44,10 +44,10 @@
                     <a href="/wallet/fund-wallet"><i class="fas fa-credit-card"></i> Wallet Funding</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fas fa-dollar-sign"></i> Refer Users</a>
+                    <a href="#"><i class="fa-solid fa-user-group"></i> Refer Users</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fas fa-dollar-sign"></i> Settings</a>
+                    <a href="#"><i class="fas fa-gear"></i> Settings</a>
                 </li>
                 <li>
                     <a href="#"><i class="fas fa-money-bill-wave"></i> Logout </a>
@@ -78,13 +78,13 @@
                     <div class="menu-icons-container">
                         <div class="icon-circle"> 
                             <div>
-                                <a href="#"><i class="fas fa-th-large"></i> <br>
+                                <a href="/wallet"><i class="fas fa-th-large"></i> <br>
                                     Dashboard</a>
                             </div>
                         </div>
                         <div class="icon-circle"> 
                             <div>
-                                <a href="#"><i class="fas fa-exchange-alt"></i> <br>
+                                <a href="/wallet/transactions"><i class="fas fa-exchange-alt"></i> <br>
                                     Transactions</a>
                             </div>
                         </div>
@@ -114,9 +114,29 @@
                         </div>
                         <div class="icon-circle"> 
                             <div>
+                                <a href="#"><i class="<i class="fa-solid fa-user-group"></i>"></i> <br>
+                                    Refer</a>
+                            </div>
+                        </div>
+                        <div class="icon-circle"> 
+                            <div>
                                 <a href="#"><i class="fa-solid fa-arrow-up-from-bracket"></i> <br>
                                     Logout</a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="balance">
+                    <p class="wallet-text">Account Details </p>
+                    <div class="wallet-info">
+                        <p>Wallet Number</p>
+                        <h4>{{ wallet_number }}</h4>
+                    </div>
+                    <div class="balance-action">
+                        <p>Wallet Balance: <span> ${{ balance }}</span> </span>
+                        <div class="balance-button-group">
+                            <a href="/wallet/send-fund/"><button>Send</button></a>
+                            <a href="/wallet/receive-fund/"><button id="receive_fund_btn">Receive</button></a>
                         </div>
                     </div>
                 </div>

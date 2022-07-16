@@ -62,8 +62,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',
 
     # Local Apps
     'user',
@@ -73,6 +75,7 @@ INSTALLED_APPS = [
 
 
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -175,8 +178,8 @@ DEFAULT_FROM_EMAIL = 'damisola@wapay.com'
 
 
 # Flutterwave Information
-FLWPUBK_TEST =  env('FLWPUBK_TEST')
-FLWSECK_TEST = env('FLWSECK_TEST')
+FLWPUBK_TEST =  os.getenv('FLWPUBK_TEST')
+FLWSECK_TEST = os.getenv('FLWSECK_TEST')
 
 
 # Activate Django-Heroku.

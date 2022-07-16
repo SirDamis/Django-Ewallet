@@ -6,8 +6,12 @@ from django.forms import ModelForm
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError 
 
+from django.contrib.auth.forms import PasswordResetForm
+
 
 from django.forms.widgets import PasswordInput, TextInput, EmailInput, FileInput, NumberInput
+from django.contrib import messages 
+
 
 class RegisterForm(ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -49,3 +53,12 @@ class LoginForm(forms.Form):
     
     email = forms.CharField(widget=EmailInput(attrs={'class':'form-control', 'placeholder':'Email', 'required':'required'}))
     password = forms.CharField(widget=PasswordInput(attrs={'class':'form-control','placeholder':'Password', 'required':'required'}))
+
+
+class EmailValidationOnForgotPassword(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+            msg = "No user registered with the specified e-mail address."
+            self.add_error('email', msg)
+        return email

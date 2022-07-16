@@ -21,19 +21,6 @@
 						</p>
 					</div>
 					<form action="/login/" method="POST">
-						{% if messages %}
-							{% for message in messages %}
-								{% if message.tags == 'success'%}
-									<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-								{% elif message.tags == 'info' %}
-									<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-								{% elif message.tags == 'warning' %}
-									<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-								{% elif message.tags == 'error' %}
-									<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-								{% endif %}
-							{% endfor %}
-						{% endif %}
 						{% csrf_token %}
 						<div class="form-group">
 							 <label for="email">Email</label> <br>
@@ -43,12 +30,19 @@
 							<label for="password">Password</label> <br>
 							{{ form.password }}
 						</div>
+						{% if form.non_field_errors %}
+							<span class='validation-error'>
+								{% for error in form.non_field_errors %}
+								{{ error }}
+								{% endfor %}
+							</span>
+						{% endif %}
 	 
 						<button type="submit" class="auth-submit">Log In </button>
 
 						
 						<div class="form-group forgot-password">
-								<a href="#" class="">Forgot Password? </a>
+								<a href="/password_reset" class="">Forgot Password? </a>
 						</div>
 		
 						

@@ -1075,13 +1075,13 @@ select::-ms-expand {
   .content-body .menu-bar .menu-icons-container .icon-circle div{
     text-align: center;
   }
-  .content-body .menu-bar .menu-icons-container .icon-circle:hover a{
+  .content-body .menu-bar .menu-icons-container .icon-circle div:hover a{
     color: #fff;
   }
   .content-body .menu-bar .menu-icons-container .icon-circle i{
     color: #043774;
   }
-  .content-body .menu-bar .menu-icons-container .icon-circle:hover i{
+  .content-body .menu-bar .menu-icons-container .icon-circle div:hover i{
     color: #fff;
   }
   .content-body .menu-bar .menu-icons-container .icon-circle img{
@@ -1280,9 +1280,10 @@ select::-ms-expand {
   font-size: 13px;
 }
 .auth .auth-card form .validation-error {
-  margin-top: 3px;
+  margin-top: 5px;
   color: red;
   font-size: 12px;
+  font-weight: 600;
 }
 .auth .auth-card .auth-submit {
   margin-top: 12px;

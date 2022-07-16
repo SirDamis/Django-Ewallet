@@ -1,20 +1,6 @@
 {% extends 'html/wallet/base.html' %} 
 {% block content %}
 	<div class="balance">
-		<p class="wallet-text">Account Details </p>
-		<div class="wallet-info">
-			<p>Wallet Number</p>
-			<h4>{{ wallet_number }}</h4>
-		</div>
-		<div class="balance-action">
-			<p>Wallet Balance: <span> ${{ balance }}</span> </span>
-			<div class="balance-button-group">
-				<a href="send-fund"><button>Send</button></a>
-				<a href="receive-fund"><button id="receive_fund_btn">Receive</button></a>
-			</div>
-		</div>
-	</div>
-	<div class="balance">
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
 			<circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
 			<line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
