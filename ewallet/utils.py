@@ -6,6 +6,9 @@ import time
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from six import text_type
 
+
+REDIRECT_DOMAIN = os.getenv('REDIRECT_DOMAIN')
+
 def raveSetup():
     rave = Rave(FLWPUBK_TEST, FLWSECK_TEST, usingEnv=False)
     # rave = Rave(os.environ.get('FLWPUBK_TEST'), os.environ.get('FLWSECK_TEST'))

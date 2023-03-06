@@ -1,5 +1,4 @@
 {% load static %}
-{% load humanize %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!DOCTYPE html>
 <html>
@@ -45,7 +44,7 @@
                     <a href="/wallet/fund-wallet"><i class="fas fa-credit-card"></i> Wallet Funding</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa-solid fa-user-group"></i> Refer Users</a>
+                    <a href="/referral"><i class="fa-solid fa-user-group"></i> Refer Users</a>
                 </li>
                 <li>
                     <a href="#"><i class="fas fa-gear"></i> Settings</a>
@@ -115,7 +114,7 @@
                         </div>
                         <div class="icon-circle"> 
                             <div>
-                                <a href="#"><i class="<i class="fa-solid fa-user-group"></i>"></i> <br>
+                                <a href="/referral/"><i class="<i class="fa-solid fa-user-group"></i>"></i> <br>
                                     Refer</a>
                             </div>
                         </div>
@@ -124,20 +123,6 @@
                                 <a href="#"><i class="fa-solid fa-arrow-up-from-bracket"></i> <br>
                                     Logout</a>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="balance">
-                    <p class="wallet-text">Account Details </p>
-                    <div class="wallet-info">
-                        <p>Wallet Number</p>
-                        <h4>{{ wallet_number }}</h4>
-                    </div>
-                    <div class="balance-action">
-                        <p>Wallet Balance: <span> ₦{{ balance|floatformat:2|intcomma  }}</span> </span>
-                        <div class="balance-button-group">
-                            <a href="/wallet/send-fund/"><button>Send</button></a>
-                            <a href="/wallet/receive-fund/"><button id="receive_fund_btn">Receive</button></a>
                         </div>
                     </div>
                 </div>

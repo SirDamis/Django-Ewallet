@@ -18,8 +18,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from referral.views import ReferralRegistrationView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
     path('wallet/', include('wallet.urls')),
+    path('referral/', include('referral.urls')),
+
+
+    path('join-us/<code>', ReferralRegistrationView.as_view())
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

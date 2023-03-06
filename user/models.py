@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.utils import timezone
 
-
+from referral.models import Referral
 
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, **other_fields):
@@ -38,6 +38,7 @@ class UserManager(BaseUserManager):
         other_fields.setdefault("is_active", True) 
         other_fields.setdefault("is_staff", True) 
         other_fields.setdefault('is_superuser', True)
+        other_fields.setdefault('is_verified', True)
 
         user = self.create_user(
             email,
@@ -63,6 +64,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False) # Admin user; Non super-user
     is_superuser = models.BooleanField(default=False) # Superuser
+    referred_by = models.ForeignKey(Referral, on_delete=models.SET_NULL, null=True, related_name='referred_by')
 
     objects = UserManager()
 

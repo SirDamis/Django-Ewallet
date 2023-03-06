@@ -2,12 +2,12 @@ from django import template
 from django.http import request, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.conf import settings
 
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
-from django.conf import settings
-from django.urls import reverse_lazy
+
 from .forms import RegisterForm
 
 from .models import User
@@ -37,10 +37,18 @@ class RegisterView(SuccessMessageMixin, CreateView):
     success_message = "Account was created successfully"
     redirect_authenticated_user = True
 
+    def form_valid(self, form):
+        # obj = form.save(commit=False)
+        # obj.referred_by = self.request.session['referral_code']
+        # obj.save()
+
+        return super(RegisterView, self).form_valid(form)
+
     def get(self, request, *args, **kwargs):
 
         current_site = get_current_site(request)
-        print(current_site)
+        # print(current_site)
+        # print(request.session['referral_code'])
         if request.user.is_authenticated:
             return redirect('wallet')
         return super(RegisterView, self).get(self, request, *args, **kwargs)

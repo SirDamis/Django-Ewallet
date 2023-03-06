@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     # Local Apps
     'user',
     'wallet',
+    'referral',
 
     # 3rd Party Apps
 
@@ -169,9 +170,6 @@ AUTH_USER_MODEL = 'user.User'
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/wallet'
 LOGOUT_REDIRECT_URL = '/'
-
-
-
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')

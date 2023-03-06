@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Sum
 
 import rave_python.rave_exceptions as RaveExceptions
-from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST
+from ewallet.utils import generateTransactionReference, raveSetup, FLWSECK_TEST, REDIRECT_DOMAIN
 
 import requests
 from django.shortcuts import redirect
@@ -17,6 +17,7 @@ from django.template.loader import render_to_string
 from wallet.models import TransactionHistory, Wallet
 
 from user.mixins import VerificationRequiredMixin
+
 
 rave = raveSetup()
 
@@ -56,12 +57,15 @@ class WalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
             by=auth, success=True, type='TW').aggregate(total_amount_sent=Sum('amount'))
         amount_received = TransactionHistory.objects.filter(
             to=auth, success=True, type='TW').aggregate(total_amount_received=Sum('amount'))
+        amount_funded = TransactionHistory.objects.filter(
+            by=auth, success=True, type='FW').aggregate(total_amount_funded=Sum('amount'))
         transactions = (TransactionHistory.objects.filter(
             by=auth, success=True).order_by('-date')[:5])
 
         context['transactions'] = transactions
         context['amount_sent'] = amount_sent['total_amount_sent'] if amount_sent['total_amount_sent'] else 0
         context['amount_received'] = amount_received['total_amount_received'] if amount_received['total_amount_received'] else 0
+        context['amount_funded'] = amount_funded['total_amount_funded'] if amount_funded['total_amount_funded'] else 0
         context['transaction_times'] = transaction_times
         context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
@@ -81,6 +85,7 @@ class SendFundView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet = Wallet.objects.filter(user=auth).first()
+        context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
@@ -129,7 +134,7 @@ class SendFundView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
 
         context = {'error_msg': 'Deposit succcessful'}
         rendered = render_to_string(
-            'html/wallet/successful-fund.html', context=context)
+            'html/wallet/successful-transfer.html', context=context)
         return HttpResponse(rendered)
 
 
@@ -141,6 +146,7 @@ class ReceiveFundView(LoginRequiredMixin, VerificationRequiredMixin, TemplateVie
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet = Wallet.objects.filter(user=auth).first()
+        context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
@@ -158,6 +164,7 @@ class FundWalletProccessView(LoginRequiredMixin, VerificationRequiredMixin, Temp
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet = Wallet.objects.filter(user=auth).first()
+        context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
@@ -207,6 +214,7 @@ class FundWalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet = Wallet.objects.filter(user=auth).first()
+        context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
         return context
 
@@ -219,7 +227,7 @@ class FundWalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView
             'tx_ref': tx_ref,
             'amount': amount,
             'currency': "NGN",
-            'redirect_url': "http://127.0.0.1:8000/wallet/fund-wallet/success",
+            'redirect_url': REDIRECT_DOMAIN+"/wallet/fund-wallet/success",
             'customer': {
                 'email': request.user.email,
                 'name': request.user.name,
@@ -243,7 +251,7 @@ class FundWalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView
             )
             record_transaction.save()
             return redirect(response_data['data']['link'])
-        return HttpResponse('Error') 
+        return HttpResponse('Error')
 
 
 class WithdrawWalletView(LoginRequiredMixin, VerificationRequiredMixin, TemplateView):
@@ -253,76 +261,77 @@ class WithdrawWalletView(LoginRequiredMixin, VerificationRequiredMixin, Template
     login_url = '/login/'
     template_name = 'html/wallet/withdraw-wallet.html'
 
-    def charge(self):
-        response_data = requests.get(
-            "https://api.flutterwave.com/v3/transfers/rates",
-            headers={'Authorization': 'Bearer '+FLWSECK_TEST},
-            json={
-                'amount': 100,
-                'destination_currency': 'NGN', 
-                'source_currency': 'NGN'
-            }
-        ).json()
-        return response_data
+    # def charge(self):
+    #     response_data = requests.get(
+    #         "https://api.flutterwave.com/v3/transfers/rates",
+    #         headers={'Authorization': 'Bearer '+FLWSECK_TEST},
+    #         json={
+    #             'amount': 100,
+    #             'destination_currency': 'NGN',
+    #             'source_currency': 'NGN'
+    #         }
+    #     ).json()
+    #     return response_data
 
     def load_bank_list(self):
         """
         Fetch bank details for all banks in Nigeria
         """
-
         url = 'https://api.flutterwave.com/v3/banks/NG'
-        response_data = requests.get(url,
-                            headers={
-                                'Authorization': 'Bearer '+FLWSECK_TEST
-                            }
-                            )
+        response_data = requests.get(
+            url,
+            headers = {
+                'Authorization': 'Bearer '+FLWSECK_TEST
+            }
+        )
         return response_data.json()['data']
 
-    def account_number_verification(self, account_number, account_bank):
-        """
-        Verify if the account numbe submitted is valid
-        """
-        response = requests.post(
-            'https://api.flutterwave.com/v3/accounts/resolve',
-            headers={
-                'Authorization': 'Bearer '+FLWSECK_TEST,
-                'Accept': 'application/json'
-            },
-            json={
-                "account_number": account_number,
-                "account_bank": account_bank
-            }
-        ).json()
-        return response
+    # def account_number_verification(self, account_number, account_bank):
+    #     """
+    #     Verify if the account numbe submitted is valid
+    #     """
+    #     response = requests.post(
+    #         'https://api.flutterwave.com/v3/accounts/resolve',
+    #         headers={
+    #             'Authorization': 'Bearer '+FLWSECK_TEST,
+    #             'Accept': 'application/json'
+    #         },
+    #         json={
+    #             "account_number": account_number,
+    #             "account_bank": account_bank
+    #         }
+    #     ).json()
+    #     return response
 
     def get_context_data(self, **kwargs):
         bank_list = self.load_bank_list()
-        print(self.charge())
+        # print(self.charge())
         # print(self.withdrawal_charge_fee())
 
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet = Wallet.objects.filter(user=auth).first()
+        context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
         context['bank_list'] = sorted(bank_list, key=lambda d: d['name'])
         return context
 
-    def withdrawal_charge_fee(self):
-        # url = 'https://api.flutterwave.com/v3/transfers/fee'
-        # response_data = requests.get(url,
-        #     headers={
-        #         'Authorization': 'Bearer '+FLWSECK_TEST
-        #     },
-        #     json={
-        #         "type": "account",
-        #         "amount": 2700,
-        #         "currency": "EUR"
-        #     }
-        # )
-        res2 = rave.Transfer.getFee("EUR")
-        print(res2)
-        # print(response_data.json())
-        # return response_data.json()
+    # def withdrawal_charge_fee(self):
+    #     # url = 'https://api.flutterwave.com/v3/transfers/fee'
+    #     # response_data = requests.get(url,
+    #     #     headers={
+    #     #         'Authorization': 'Bearer '+FLWSECK_TEST
+    #     #     },
+    #     #     json={
+    #     #         "type": "account",
+    #     #         "amount": 2700,
+    #     #         "currency": "EUR"
+    #     #     }
+    #     # )
+    #     res2 = rave.Transfer.getFee("EUR")
+    #     print(res2)
+    #     # print(response_data.json())
+    #    # return response_data.json()
 
     def post(self,  request, *args, **kwargs):
         tx_ref = generateTransactionReference()
@@ -369,5 +378,6 @@ class TransactionView(LoginRequiredMixin, VerificationRequiredMixin, TemplateVie
         context = super().get_context_data(**kwargs)
         auth = self.request.user
         auth_wallet = Wallet.objects.filter(user=auth).first()
+        context['balance'] = auth_wallet.balance
         context['wallet_number'] = auth_wallet.number.hex
         return context
