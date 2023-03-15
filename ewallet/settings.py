@@ -48,9 +48,10 @@ SECRET_KEY = 'django-insecure-cqlz!2-4eru@2v@(v#_s&e*v@h#!2+@m5ry%hv!!*ix#tq=p_0
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'https://wapaywallet.herokuapp.com/',
-    'localhost',
-    '127.0.0.1',
+    # 'https://wapaywallet.herokuapp.com/',
+    # 'localhost',
+    # '127.0.0.1',
+    "*",
 ]
 
 
@@ -73,13 +74,14 @@ INSTALLED_APPS = [
     'referral',
 
     # 3rd Party Apps
-
+    "anymail",
 
 ]
 SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -112,23 +114,23 @@ WSGI_APPLICATION = 'ewallet.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD'),
+#         'HOST': os.environ.get('DB_HOST'),
+#         'PORT': os.environ.get('DB_PORT'),
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -181,12 +183,22 @@ LOGIN_REDIRECT_URL = '/wallet'
 LOGOUT_REDIRECT_URL = '/'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# # Email Settings for Mailtrap.io
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+# EMAIL_HOST = os.getenv('EMAIL_HOST')
+# EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+# EMAIL_PORT = os.getenv('EMAIL_PORT')
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Email Settings for Sendinblue using Anymail
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": os.getenv('SENDINBLUE_API_KEY'),
+}
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
 
 
 
@@ -195,5 +207,4 @@ FLWPUBK_TEST =  os.getenv('FLWPUBK_TEST')
 FLWSECK_TEST = os.getenv('FLWSECK_TEST')
 
 
-# Activate Django-Heroku.
-django_heroku.settings(locals())
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
