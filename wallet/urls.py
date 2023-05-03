@@ -8,6 +8,8 @@ from .views import (
     WalletView,
     TransactionView,
     WithdrawWalletView,
+
+    withdraw_wallet_status
 )
 
 urlpatterns = [
@@ -18,4 +20,5 @@ urlpatterns = [
     path('fund-wallet/', FundWalletView.as_view(), name='fund-wallet'),
     path('fund-wallet/success/', FundWalletProccessView.as_view(), name='fund-wallet-success'),
     path('withdraw-wallet/', WithdrawWalletView.as_view(), name='withdraw-wallet'),
+    path('withdraw-wallet/status/', withdraw_wallet_status, name='withdraw-wallet-status'),
 ] 

@@ -21,8 +21,7 @@ from django.utils.http import urlsafe_base64_decode
 
 from ewallet.utils import account_activation_token
 from .mixins import NotVerifiedDisallowedMixin
-
-from django.contrib.sites.shortcuts import get_current_site
+from django.contrib import messages
 
 
 class HomeView(TemplateView):
@@ -37,18 +36,7 @@ class RegisterView(SuccessMessageMixin, CreateView):
     success_message = "Account was created successfully"
     redirect_authenticated_user = True
 
-    def form_valid(self, form):
-        # obj = form.save(commit=False)
-        # obj.referred_by = self.request.session['referral_code']
-        # obj.save()
-
-        return super(RegisterView, self).form_valid(form)
-
     def get(self, request, *args, **kwargs):
-
-        current_site = get_current_site(request)
-        # print(current_site)
-        # print(request.session['referral_code'])
         if request.user.is_authenticated:
             return redirect('wallet')
         return super(RegisterView, self).get(self, request, *args, **kwargs)
@@ -73,9 +61,8 @@ class ActivateAccount(TemplateView):
             user.is_active = True
             user.is_verified = True
             user.save()
-            # login(request, user)
-            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
-            # messages.success(request, ('Your account have been confirmed.'))
+            login(request, user)
+            messages.success(request, ('Your account have been confirmed.'))
             return redirect('login')
         else:
             return HttpResponse('Activation link is invalid!')

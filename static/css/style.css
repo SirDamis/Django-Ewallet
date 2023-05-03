@@ -1421,3 +1421,55 @@ select::-ms-expand {
     color: #043774;
   }
 }
+
+
+
+/* Style for error messages on authentication pages */
+.messages {
+  position: relative;
+  margin: 10px 0;
+  padding: 10px 10px 10px 30px;
+  color: #fff;
+  background-color: #f44336;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.messages li {
+  list-style: none;
+  margin-bottom: 5px;
+}
+
+/* Style for cancel icon */
+.messages::before {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  content: '\00d7'; /* Unicode character for "times" symbol */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* Style for hover effect on cancel icon */
+.messages:hover::before {
+  color: #fff;
+}
+
+/* Style for JavaScript animation when hiding the message */
+.hide-message {
+  animation: hide-message 0.5s ease-out forwards;
+}
+
+@keyframes hide-message {
+  0% {
+    opacity: 1;
+    max-height: 100px;
+  }
+  100% {
+    opacity: 0;
+    max-height: 0;
+  }
+}

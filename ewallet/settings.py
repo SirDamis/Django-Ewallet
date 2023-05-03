@@ -15,7 +15,6 @@ import os
 import environ
 
 
-import django_heroku
 
 
 
@@ -114,23 +113,23 @@ WSGI_APPLICATION = 'ewallet.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD'),
+#         'HOST': os.environ.get('DB_HOST'),
+#         'PORT': os.environ.get('DB_PORT'),
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -182,7 +181,7 @@ LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/wallet'
 LOGOUT_REDIRECT_URL = '/'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # # Email Settings for Mailtrap.io
 # DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
@@ -192,13 +191,13 @@ LOGOUT_REDIRECT_URL = '/'
 # EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-# Email Settings for Sendinblue using Anymail
-ANYMAIL = {
-    "SENDINBLUE_API_KEY": os.getenv('SENDINBLUE_API_KEY'),
-}
-EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
-# SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
+# # Email Settings for Sendinblue using Anymail
+# ANYMAIL = {
+#     "SENDINBLUE_API_KEY": os.getenv('SENDINBLUE_API_KEY'),
+# }
+# EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+# # SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
 
 
 
