@@ -1,0 +1,53 @@
+# Cursor Rules: WaPay Project
+
+## Project Structure
+- **ewallet/**: Django project config, settings, URLs, utils
+- **user/**: Custom user model, registration, auth, signals
+- **wallet/**: Wallet logic, transactions, fund/withdraw
+- **referral/**: Referral codes, relationships, registration
+- **static/**: CSS, JS, images
+- **templates/**: HTML/email templates
+
+## Environment & Config
+- **Python:** 3.8.10
+- **Framework:** Django 4.0.3
+- **Dependency:** requirements.txt
+- **Build:** build.sh, Procfile, runtime.txt
+- **Settings:** ewallet/settings.py, .env (ignored)
+- **Key Env Vars:** DEBUG, SECRET_KEY, FLWPUBK_TEST, FLWSECK_TEST, REDIRECT_DOMAIN
+- **Secrets:** All keys/passwords via env vars only
+
+## Entry Points
+- **manage.py**: Django CLI
+- **ewallet/wsgi.py**: WSGI
+- **ewallet/asgi.py**: ASGI
+- **Procfile**: Heroku (web: gunicorn)
+
+## Main APIs & Routes
+- **user/**: Auth, registration, password, activation
+- **wallet/**: Dashboard, fund, send, receive, withdraw, transactions
+- **referral/**: Referral dashboard, join via code
+
+## Key Models
+- **User** (custom, email-based)
+- **Wallet** (balance, user, number)
+- **TransactionHistory** (reference, amount, type, by/to)
+- **PendingWithdrawal** (reference, user, status, amount)
+- **ReferralCode** (user, code)
+- **Referral** (referrer, referee)
+
+## Extension Points
+- **Signals:** User creation triggers wallet/referral/email
+- **Payment:** Flutterwave via utils/env
+- **Email:** Anymail, console, or SMTP
+- **Settings:** All via env vars
+
+## Test Coverage
+- **user/tests.py, wallet/tests.py, referral/tests.py:** Stubs only (❌)
+- **pytest.ini:** Configured for Django
+
+## Reference Tags
+- @project-structure
+- @env-vars
+- @public-api
+- @test-coverage
